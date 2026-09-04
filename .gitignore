@@ -1,0 +1,18 @@
+# Godot 4+
+.godot/
+/android/
+
+# Pliki kompilacji .NET
+.mono/
+bin/
+obj/
+*.user
+*.userprefs
+
+# Eksporty gry
+export_presets.cfg
+build/
+
+# Systemowe
+.DS_Store
+*~
