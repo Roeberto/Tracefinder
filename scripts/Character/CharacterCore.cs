@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Channels;
 
 namespace Tracefinder.Character
 {
     public class CharacterCore
     {
-        public int Level { get; set; } = 1;
-        public string Name { get; set; } = "";
-        public int Strength { get; set; } = 10;
+        public int Level { get; set; } = 1; // poziom postaci
+        public string Name { get; set; } = ""; // nazwa postaci
+        public int Strength { get; set; } = 10; 
         public int Dexterity { get; set; } = 10;
         public int Constitution { get; set; } = 10;
         public int Intelligence { get; set; } = 10;
         public int Wisdom { get; set; } = 10;
         public int Charisma { get; set; } = 10;
-        public string ClassID { get; set; } = "";
-        public AbilityScore SelectedKeyAbility { get; set; }
-        public List<SkillName> ExtraTrainedSkills = new();
+        public string ClassID { get; set; } = ""; // ID klasy postaci np. wojownik = 0
+        public AbilityScore SelectedKeyAbility { get; set; } 
+        public List<SkillName> ExtraTrainedSkills = new(); //czy postać ma jeszcze jakieś dodatkowe wytrenowane skille
 
 
         // Połączenie zmiennej postaci z clasą AbilityScore
@@ -81,6 +82,26 @@ namespace Tracefinder.Character
         {
             return ProficiencyMath.Bonus(classStats.PerceptionProficiency, Level) + AbilityModifier(AbilityScore.Wisdom);
         }
+
+        // sprawdza czy skill w liście classstats.trainedskills lub extratrainedskills zawiera skill wskazany w metodzie i zwraca zmienną typu proficiencyrank, !!!na razie tylko trained i untrained
+        public ProficiencyRank GetSkillRank(SkillName skill ,ClassStats classStats)  
+		{	
+			bool trained = classStats.TrainedSkills.Contains(skill) || ExtraTrainedSkills.Contains(skill);
+    		return trained ? ProficiencyRank.Trained : ProficiencyRank.Untrained;
+		}
+
+        public int ComputeSkillBonus(SkillName skill, ClassStats classStats)
+        {
+            ProficiencyRank rank = GetSkillRank(skill, classStats);
+            int bonus = ProficiencyMath.Bonus(rank, Level);
+            int bonusFromAbilityScore = AbilityModifier(SkillCatalog.KeyAbilityFor(skill));
+            return bonus + bonusFromAbilityScore;
+        }
+        
+
+
+
+
 
     }
 

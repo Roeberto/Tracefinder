@@ -5,7 +5,7 @@ namespace Tracefinder.Character
 {
     public class SkillCatalog
     {
-        public AbilityScore KeyAbilityFor(SkillName skill)
+        public static AbilityScore KeyAbilityFor(SkillName skill)
         {
             switch (skill)
             {
