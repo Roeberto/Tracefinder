@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://dkuv8gwheyalj"]
+
+[ext_resource type="Script" uid="uid://b0kb4fpfbhrwi" path="res://scripts/MainMenu.cs" id="1_yqorp"]
+
+[node name="MainMenu" type="Node2D" unique_id=165734600 node_paths=PackedStringArray("_PlayButton", "_SettingsButton", "_QuitButton")]
+script = ExtResource("1_yqorp")
+_PlayButton = NodePath("ButtonManager/Play")
+_SettingsButton = NodePath("ButtonManager/Settings")
+_QuitButton = NodePath("ButtonManager/Exit")
+
+[node name="ButtonManager" type="Control" parent="." unique_id=104779930]
+light_mask = 3
+visibility_layer = 3
+layout_mode = 3
+anchors_preset = 0
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Play" type="Button" parent="ButtonManager" unique_id=1707559325]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 680.0
+offset_top = 376.0
+offset_right = 1208.0
+offset_bottom = 480.0
+text = "Play"
+
+[node name="Settings" type="Button" parent="ButtonManager" unique_id=1694905338]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 568.0
+offset_right = 1136.0
+offset_bottom = 616.0
+text = "Settings"
+
+[node name="Exit" type="Button" parent="ButtonManager" unique_id=851113465]
+layout_mode = 0
+offset_left = 816.0
+offset_top = 888.0
+offset_right = 1096.0
+offset_bottom = 984.0
+text = "Exit"
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1309610512]
+light_mask = 0
+color = Color(1, 0.65882355, 0.6039216, 1)
