@@ -62,6 +62,26 @@ namespace Tracefinder.Character
             return 10 + AbilityModifier(SelectedKeyAbility) + ProficiencyMath.Bonus(classStats.ClassDcProficiency, Level);
         }
 
+        public int ComputeFortitude(ClassStats classStats)
+        {
+            return ProficiencyMath.Bonus(classStats.FortitudeProficiency, Level) + AbilityModifier(AbilityScore.Constitution);
+        }
+
+        public int ComputeReflex(ClassStats classStats)
+        {
+            return ProficiencyMath.Bonus(classStats.ReflexProficiency, Level) + AbilityModifier(AbilityScore.Dexterity);
+        }
+
+        public int ComputeWill(ClassStats classStats)
+        {
+            return ProficiencyMath.Bonus(classStats.WillProficiency, Level) + AbilityModifier(AbilityScore.Wisdom);
+        }
+
+        public int ComputePerception(ClassStats classStats)
+        {
+            return ProficiencyMath.Bonus(classStats.PerceptionProficiency, Level) + AbilityModifier(AbilityScore.Wisdom);
+        }
+
     }
 
 
