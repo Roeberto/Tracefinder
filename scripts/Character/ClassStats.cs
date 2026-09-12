@@ -20,7 +20,5 @@ namespace Tracefinder.Character
         public List<string> Level1Features { get; set; } = new();
 
     }
-
-
-
+    
 }
