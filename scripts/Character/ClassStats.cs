@@ -6,11 +6,11 @@ namespace Tracefinder.Character
     
     public class ClassStats
     {
-        public string Name { get; set; } = "";
-        public List<AbilityScore> KeyAbilityOptions { get; set; } = new();
-        public int HitPointsPerLevel { get; set; }
-        public List<SkillName> TrainedSkills { get; set; } = new();
-        public int BonusSkillCount { get; set; }
+        public string Name { get; set; } = ""; // nazwa klasy postaci
+        public List<AbilityScore> KeyAbilityOptions { get; set; } = new(); // 
+        public int HitPointsPerLevel { get; set; } // ile hp na poziom ma postać
+        public List<SkillName> TrainedSkills { get; set; } = new(); // Jakie skille typu medicine albo athelics jest wytrenowana
+        public int BonusSkillCount { get; set; } // ile dodatkowych skillow moze postac sobie dobrac
         public ProficiencyRank PerceptionProficiency { get; set; }
         public ProficiencyRank FortitudeProficiency { get; set; }
         public ProficiencyRank ReflexProficiency { get; set; }
@@ -23,4 +23,8 @@ namespace Tracefinder.Character
 
 
 
+
+
+
 }
+
