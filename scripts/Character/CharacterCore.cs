@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Channels;
 
 namespace Tracefinder.Character
 {
@@ -14,6 +13,7 @@ namespace Tracefinder.Character
         public int Intelligence { get; set; } = 10;
         public int Wisdom { get; set; } = 10;
         public int Charisma { get; set; } = 10;
+        public HealthTracker Health { get; set; }
         public string ClassID { get; set; } = ""; // ID klasy postaci np. wojownik = 0
         public AbilityScore SelectedKeyAbility { get; set; } 
         public List<SkillName> ExtraTrainedSkills = new(); //czy postać ma jeszcze jakieś dodatkowe wytrenowane skille
