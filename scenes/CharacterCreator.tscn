@@ -1,0 +1,945 @@
+[gd_scene load_steps=10 format=3]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.117647, 0.101961, 0.078431, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.160784, 0.105882, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
+bg_color = Color(0.086275, 0.07451, 0.062745, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.160784, 0.105882, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_placeholder"]
+bg_color = Color(0.086275, 0.07451, 0.062745, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.239216, 0.196078, 0.12549, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ac_card"]
+bg_color = Color(0.117647, 0.101961, 0.078431, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.788235, 0.564706, 0.247059, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 14.0
+content_margin_top = 12.0
+content_margin_right = 14.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge_green"]
+bg_color = Color(0.498039, 0.690196, 0.411765, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge_grey"]
+bg_color = Color(0.419608, 0.396078, 0.345098, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge_dark"]
+bg_color = Color(0.239216, 0.196078, 0.12549, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hpbar_bg"]
+bg_color = Color(0.086275, 0.07451, 0.062745, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.160784, 0.105882, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hpbar_fill"]
+bg_color = Color(0.498039, 0.690196, 0.411765, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[node name="CharacterCreator" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.082353, 0.070588, 0.054902, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="RootVBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TopBar" type="PanelContainer" parent="Margin/RootVBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="TopBarRow" type="HBoxContainer" parent="Margin/RootVBox/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="IdentityBox" type="VBoxContainer" parent="Margin/RootVBox/TopBar/TopBarRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="NameInput" type="LineEdit" parent="Margin/RootVBox/TopBar/TopBarRow/IdentityBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+placeholder_text = "Nazwa postaci"
+
+[node name="SubtitleLabel" type="Label" parent="Margin/RootVBox/TopBar/TopBarRow/IdentityBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 13
+text = "Postać gracza · Tracefinder"
+
+[node name="LevelPill" type="PanelContainer" parent="Margin/RootVBox/TopBar/TopBarRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+
+[node name="LevelBox" type="HBoxContainer" parent="Margin/RootVBox/TopBar/TopBarRow/LevelPill"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LevelLabel" type="Label" parent="Margin/RootVBox/TopBar/TopBarRow/LevelPill/LevelBox"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "POZIOM"
+
+[node name="LevelValue" type="Label" parent="Margin/RootVBox/TopBar/TopBarRow/LevelPill/LevelBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+horizontal_alignment = 2
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 18
+text = "1"
+
+[node name="ClassPill" type="PanelContainer" parent="Margin/RootVBox/TopBar/TopBarRow"]
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+
+[node name="ClassBox" type="HBoxContainer" parent="Margin/RootVBox/TopBar/TopBarRow/ClassPill"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ClassLabel" type="Label" parent="Margin/RootVBox/TopBar/TopBarRow/ClassPill/ClassBox"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "KLASA"
+
+[node name="ClassOption" type="OptionButton" parent="Margin/RootVBox/TopBar/TopBarRow/ClassPill/ClassBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="KeyAbilityPill" type="PanelContainer" parent="Margin/RootVBox/TopBar/TopBarRow"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+
+[node name="KeyAbilityBox" type="HBoxContainer" parent="Margin/RootVBox/TopBar/TopBarRow/KeyAbilityPill"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="KeyAbilityLabel" type="Label" parent="Margin/RootVBox/TopBar/TopBarRow/KeyAbilityPill/KeyAbilityBox"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "CECHA KLUCZOWA"
+
+[node name="KeyAbilityOption" type="OptionButton" parent="Margin/RootVBox/TopBar/TopBarRow/KeyAbilityPill/KeyAbilityBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MainLayout" type="HBoxContainer" parent="Margin/RootVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="LeftPanel" type="PanelContainer" parent="Margin/RootVBox/MainLayout"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="LeftScroll" type="ScrollContainer" parent="Margin/RootVBox/MainLayout/LeftPanel"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="LeftPanelBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="SavedCharactersTitle" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "Zapisane postacie"
+
+[node name="CharacterNames" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="NewCharacterButton" type="Button" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "+ Nowa postać"
+
+[node name="HSeparator1" type="HSeparator" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+
+[node name="AncestryTitle" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "Pochodzenie"
+
+[node name="AncestryRow" type="PanelContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_placeholder")
+
+[node name="AncestryRowBox" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/AncestryRow"]
+layout_mode = 2
+
+[node name="AncestryKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/AncestryRow/AncestryRowBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 13
+text = "Ancestry"
+
+[node name="AncestryValueLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/AncestryRow/AncestryRowBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 12
+text = "nie wybrano"
+
+[node name="HeritageRow" type="PanelContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_placeholder")
+
+[node name="HeritageRowBox" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/HeritageRow"]
+layout_mode = 2
+
+[node name="HeritageKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/HeritageRow/HeritageRowBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 13
+text = "Dziedzictwo"
+
+[node name="HeritageValueLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/HeritageRow/HeritageRowBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 12
+text = "nie wybrano"
+
+[node name="BackgroundRow" type="PanelContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_placeholder")
+
+[node name="BackgroundRowBox" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/BackgroundRow"]
+layout_mode = 2
+
+[node name="BackgroundKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/BackgroundRow/BackgroundRowBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 13
+text = "Background"
+
+[node name="BackgroundValueLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/BackgroundRow/BackgroundRowBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 12
+text = "nie wybrano"
+
+[node name="HSeparator2" type="HSeparator" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+
+[node name="FeatsTitle" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "Featy (poziom 1)"
+
+[node name="AncestryFeatRow" type="PanelContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_placeholder")
+
+[node name="AncestryFeatRowBox" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/AncestryFeatRow"]
+layout_mode = 2
+
+[node name="AncestryFeatKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/AncestryFeatRow/AncestryFeatRowBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 13
+text = "Feat ancestry"
+
+[node name="AncestryFeatValueLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/AncestryFeatRow/AncestryFeatRowBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 12
+text = "nie wybrano"
+
+[node name="ClassFeatRow" type="PanelContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_placeholder")
+
+[node name="ClassFeatRowBox" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/ClassFeatRow"]
+layout_mode = 2
+
+[node name="ClassFeatKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/ClassFeatRow/ClassFeatRowBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 13
+text = "Feat klasowy"
+
+[node name="ClassFeatValueLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/ClassFeatRow/ClassFeatRowBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 12
+text = "nie wybrano"
+
+[node name="HSeparator3" type="HSeparator" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+
+[node name="ClassFeaturesTitle" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "Cechy klasowe"
+
+[node name="ClassFeaturesList" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CenterPanel" type="VBoxContainer" parent="Margin/RootVBox/MainLayout"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="AbilitiesGrid" type="GridContainer" parent="Margin/RootVBox/MainLayout/CenterPanel"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+columns = 6
+
+[node name="StrengthCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="StrengthBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/StrengthCard"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="StrengthKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/StrengthCard/StrengthBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "STR"
+
+[node name="StrengthInput" type="LineEdit" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/StrengthCard/StrengthBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10"
+alignment = 1
+
+[node name="StrengthModValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/StrengthCard/StrengthBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "+0"
+
+[node name="DexterityCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="DexterityBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/DexterityCard"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="DexterityKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/DexterityCard/DexterityBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "DEX"
+
+[node name="DexterityInput" type="LineEdit" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/DexterityCard/DexterityBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10"
+alignment = 1
+
+[node name="DexterityModValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/DexterityCard/DexterityBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "+0"
+
+[node name="ConstitutionCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="ConstitutionBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/ConstitutionCard"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="ConstitutionKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/ConstitutionCard/ConstitutionBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "CON"
+
+[node name="ConstitutionInput" type="LineEdit" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/ConstitutionCard/ConstitutionBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10"
+alignment = 1
+
+[node name="ConstitutionModValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/ConstitutionCard/ConstitutionBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "+0"
+
+[node name="IntelligenceCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="IntelligenceBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/IntelligenceCard"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="IntelligenceKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/IntelligenceCard/IntelligenceBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "INT"
+
+[node name="IntelligenceInput" type="LineEdit" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/IntelligenceCard/IntelligenceBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10"
+alignment = 1
+
+[node name="IntelligenceModValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/IntelligenceCard/IntelligenceBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "+0"
+
+[node name="WisdomCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="WisdomBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/WisdomCard"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="WisdomKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/WisdomCard/WisdomBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "WIS"
+
+[node name="WisdomInput" type="LineEdit" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/WisdomCard/WisdomBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10"
+alignment = 1
+
+[node name="WisdomModValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/WisdomCard/WisdomBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "+0"
+
+[node name="CharismaCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="CharismaBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/CharismaCard"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="CharismaKeyLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/CharismaCard/CharismaBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "CHA"
+
+[node name="CharismaInput" type="LineEdit" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/CharismaCard/CharismaBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "10"
+alignment = 1
+
+[node name="CharismaModValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/AbilitiesGrid/CharismaCard/CharismaBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 14
+text = "+0"
+
+[node name="DefensesRow" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AcCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ac_card")
+
+[node name="AcBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/AcCard"]
+layout_mode = 2
+alignment = 1
+
+[node name="AcLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/AcCard/AcBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "AC"
+
+[node name="AcValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/AcCard/AcBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 34
+text = "10"
+
+[node name="HpCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="HpBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/HpCard"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="HpRow" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/HpCard/HpBox"]
+layout_mode = 2
+
+[node name="HpLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/HpCard/HpBox/HpRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "PUNKTY WYTRZYMAŁOŚCI"
+
+[node name="HpValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/HpCard/HpBox/HpRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 13
+text = "10 / 10"
+
+[node name="HpBar" type="ProgressBar" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/HpCard/HpBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hpbar_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hpbar_fill")
+max_value = 10.0
+value = 10.0
+show_percentage = false
+
+[node name="ClassDcCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="ClassDcBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/ClassDcCard"]
+layout_mode = 2
+alignment = 1
+
+[node name="ClassDcLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/ClassDcCard/ClassDcBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 11
+text = "CLASS DC"
+
+[node name="ClassDcValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/DefensesRow/ClassDcCard/ClassDcBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 28
+text = "10"
+
+[node name="SavesCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="SavesRow" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="FortitudeBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="FortitudeBadge" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/FortitudeBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge_grey")
+
+[node name="FortitudeBadgeLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/FortitudeBox/FortitudeBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.082353, 0.070588, 0.054902, 1)
+theme_override_font_sizes/font_size = 11
+text = "U"
+
+[node name="FortitudeLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/FortitudeBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 12
+text = "Fortitude"
+
+[node name="FortitudeValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/FortitudeBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "+0"
+
+[node name="ReflexBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="ReflexBadge" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/ReflexBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge_grey")
+
+[node name="ReflexBadgeLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/ReflexBox/ReflexBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.082353, 0.070588, 0.054902, 1)
+theme_override_font_sizes/font_size = 11
+text = "U"
+
+[node name="ReflexLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/ReflexBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 12
+text = "Reflex"
+
+[node name="ReflexValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/ReflexBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "+0"
+
+[node name="WillBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="WillBadge" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/WillBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge_grey")
+
+[node name="WillBadgeLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/WillBox/WillBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.082353, 0.070588, 0.054902, 1)
+theme_override_font_sizes/font_size = 11
+text = "U"
+
+[node name="WillLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/WillBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 12
+text = "Will"
+
+[node name="WillValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/WillBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "+0"
+
+[node name="PerceptionBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="PerceptionBadge" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/PerceptionBox"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge_grey")
+
+[node name="PerceptionBadgeLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/PerceptionBox/PerceptionBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.082353, 0.070588, 0.054902, 1)
+theme_override_font_sizes/font_size = 11
+text = "U"
+
+[node name="PerceptionLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/PerceptionBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.560784, 0.52549, 0.447059, 1)
+theme_override_font_sizes/font_size = 12
+text = "Percepcja"
+
+[node name="PerceptionValue" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/SavesCard/SavesRow/PerceptionBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "+0"
+
+[node name="TabsCard" type="PanelContainer" parent="Margin/RootVBox/MainLayout/CenterPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="TabsBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/TabsCard"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TabsRow" type="HBoxContainer" parent="Margin/RootVBox/MainLayout/CenterPanel/TabsCard/TabsBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="EquipmentTabButton" type="Button" parent="Margin/RootVBox/MainLayout/CenterPanel/TabsCard/TabsBox/TabsRow"]
+layout_mode = 2
+disabled = true
+flat = true
+text = "Ekwipunek"
+
+[node name="SpellsTabButton" type="Button" parent="Margin/RootVBox/MainLayout/CenterPanel/TabsCard/TabsBox/TabsRow"]
+layout_mode = 2
+disabled = true
+flat = true
+text = "Zaklęcia"
+
+[node name="RitualsTabButton" type="Button" parent="Margin/RootVBox/MainLayout/CenterPanel/TabsCard/TabsBox/TabsRow"]
+layout_mode = 2
+disabled = true
+flat = true
+text = "Rytuały"
+
+[node name="CompanionsTabButton" type="Button" parent="Margin/RootVBox/MainLayout/CenterPanel/TabsCard/TabsBox/TabsRow"]
+layout_mode = 2
+disabled = true
+flat = true
+text = "Towarzysze"
+
+[node name="TabsSeparator" type="HSeparator" parent="Margin/RootVBox/MainLayout/CenterPanel/TabsCard/TabsBox"]
+layout_mode = 2
+
+[node name="TabBodyLabel" type="Label" parent="Margin/RootVBox/MainLayout/CenterPanel/TabsCard/TabsBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.419608, 0.396078, 0.345098, 1)
+theme_override_font_sizes/font_size = 13
+text = "Sekcje w budowie — ekwipunek, zaklęcia, rytuały i towarzysze to osobne, przyszłe sub-projekty."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="RightPanel" type="PanelContainer" parent="Margin/RootVBox/MainLayout"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="RightPanelBox" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/RightPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SkillsTitle" type="Label" parent="Margin/RootVBox/MainLayout/RightPanel/RightPanelBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.788235, 0.564706, 0.247059, 1)
+theme_override_font_sizes/font_size = 16
+text = "Umiejętności"
+
+[node name="SkillsScroll" type="ScrollContainer" parent="Margin/RootVBox/MainLayout/RightPanel/RightPanelBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SkillsList" type="VBoxContainer" parent="Margin/RootVBox/MainLayout/RightPanel/RightPanelBox/SkillsScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BottomBar" type="HBoxContainer" parent="Margin/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ErrorLabel" type="Label" parent="Margin/RootVBox/BottomBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+modulate = Color(1, 0.4, 0.4, 1)
+text = ""
+visible = false
+autowrap_mode = 2
+
+[node name="BackButton" type="Button" parent="Margin/RootVBox/BottomBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Wróć"
+
+[node name="SaveButton" type="Button" parent="Margin/RootVBox/BottomBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Zapisz postać"
