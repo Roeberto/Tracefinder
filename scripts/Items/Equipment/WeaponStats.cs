@@ -10,16 +10,7 @@ namespace Tracefinder.WeaponStats
         Sword
     }
 
-    public enum WeaponTrait
-    {
-        Agile,
-        Deadly,
-        Disarm,
-        Finesse,
-        Thrown,
-        Versatile,
-        Volley
-    }
+    // WeaponTrait i wszystkie cechy: WeaponTraits.cs
 
     public enum WeaponCategory
     {
@@ -40,6 +31,6 @@ namespace Tracefinder.WeaponStats
     {
         OneHanded,
         TwoHanded,
-        OneOrTwoHanded
+        OneOrTwoHanded // noszenie w 1 ręce atak w 2 rękach
     }
 }

@@ -18,7 +18,7 @@ public static class WeaponList
         DiceNumber = 1,
         Group = WeaponGroup.Sword,
         Handedness = WeaponHandedness.OneHanded,
-        TraitList = [WeaponTrait.Versatile]
+        TraitList = [Trait.Versatile(WeaponDamageType.Piercing)]
     };
 
     public static readonly Equipment.Weapon Longbow = new()
@@ -29,11 +29,9 @@ public static class WeaponList
         DamageType = WeaponDamageType.Piercing,
         DiceNumber = 1,
         Group = WeaponGroup.Bow,
-        Handedness = WeaponHandedness.OneHanded,
+        Handedness = WeaponHandedness.OneOrTwoHanded,
         RangeIncrement = 100,
-        TraitList = [WeaponTrait.Deadly, WeaponTrait.Volley],
-        DeadlyDie = Dice.DiceSize.D10,
-        VolleyRange = 30,
+        TraitList = [Trait.Deadly(Dice.DiceSize.D8), Trait.Volley(30)],
     };
 
 
