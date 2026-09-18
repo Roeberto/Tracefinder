@@ -17,7 +17,8 @@ namespace Tracefinder.WeaponStats
         Disarm,
         Finesse,
         Thrown,
-        Versatile
+        Versatile,
+        Volley
     }
 
     public enum WeaponCategory
@@ -38,6 +39,7 @@ namespace Tracefinder.WeaponStats
     public enum WeaponHandedness
     {
         OneHanded,
-        TwoHanded
+        TwoHanded,
+        OneOrTwoHanded
     }
 }

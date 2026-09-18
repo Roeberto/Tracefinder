@@ -15,10 +15,25 @@ public static class WeaponList
         Category = WeaponCategory.Martial,
         DamageDice = Dice.DiceSize.D8,
         DamageType = WeaponDamageType.Slashing,
-        DiceNumer = 1,
+        DiceNumber = 1,
         Group = WeaponGroup.Sword,
         Handedness = WeaponHandedness.OneHanded,
         TraitList = [WeaponTrait.Versatile]
+    };
+
+    public static readonly Equipment.Weapon Longbow = new()
+    {
+        Name = "Longbow",
+        Category = WeaponCategory.Martial,
+        DamageDice = Dice.DiceSize.D8,
+        DamageType = WeaponDamageType.Piercing,
+        DiceNumber = 1,
+        Group = WeaponGroup.Bow,
+        Handedness = WeaponHandedness.OneHanded,
+        RangeIncrement = 100,
+        TraitList = [WeaponTrait.Deadly, WeaponTrait.Volley],
+        DeadlyDie = Dice.DiceSize.D10,
+        VolleyRange = 30,
     };
 
 

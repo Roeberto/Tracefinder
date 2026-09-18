@@ -16,10 +16,13 @@ public static class Equipment
         public WeaponGroup Group;
         public Dice.DiceSize DamageDice;
         public WeaponDamageType DamageType;
-        public int DiceNumer;
+        public int DiceNumber;
         public WeaponHandedness Handedness; 
         public List<WeaponTrait> TraitList;
         public int? RangeIncrement; // null = broń wręcz bez cechy Thrown (nie używa mechaniki range increment)
+        public Dice.DiceSize? DeadlyDie; // kość dokładana przy krytyku z cechy Deadly, dla null = broń nie ma Deadly
+        public int? VolleyRange; // dystans w stopach, poniżej którego Volley daje -2, dla null = broń nie ma Volley
+        public int ActionsToReload; // ile akcji zajmuje przeładowanie
     }
 }
 
