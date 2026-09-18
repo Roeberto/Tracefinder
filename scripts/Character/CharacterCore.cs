@@ -17,7 +17,7 @@ namespace Tracefinder.Character
         public string ClassID { get; set; } = ""; // ID klasy postaci np. wojownik = 0
         public AbilityScore SelectedKeyAbility { get; set; } 
         public List<SkillName> ExtraTrainedSkills = new(); //czy postać ma jeszcze jakieś dodatkowe wytrenowane skille
-
+        public int Experience { get; set; } = 0;
 
         // Połączenie zmiennej postaci z clasą AbilityScore
         public int GetScore(AbilityScore ability)
