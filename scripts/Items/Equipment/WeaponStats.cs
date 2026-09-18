@@ -10,8 +10,6 @@ namespace Tracefinder.WeaponStats
         Sword
     }
 
-    // WeaponTrait i wszystkie cechy: WeaponTraits.cs
-
     public enum WeaponCategory
     {
         Simple,

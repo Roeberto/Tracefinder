@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Tracefinder.WeaponStats;
 using Tracefinder.Gameplay;
@@ -31,13 +30,11 @@ public static class Equipment
 
             foreach (WeaponTrait trait in TraitList)
             {
-                // Versatile P - dokłada jeden alternatywny typ
                 if (trait is VersatileTrait versatile)
                 {
                     types.Add(versatile.Damage);
                 }
 
-                // Modular (B, P, or S) - dokłada kilka typów naraz
                 if (trait is ModularTrait modular)
                 {
                     foreach (WeaponDamageType type in modular.DamageTypes)
@@ -50,6 +47,7 @@ public static class Equipment
 
             return types;
         }
+
         public bool CanDeal(WeaponDamageType type)
         {
             return PossibleDamageTypes().Contains(type);

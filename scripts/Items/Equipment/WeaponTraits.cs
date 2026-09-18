@@ -3,12 +3,12 @@ using Tracefinder.Gameplay;
 namespace Tracefinder.WeaponStats
 {
     public abstract record WeaponTrait;
-    public sealed record DeadlyTrait(Dice.DiceSize Die) : WeaponTrait;           // Deadly d10 - dodatkowa kość przy krytyku
-    public sealed record FatalTrait(Dice.DiceSize Die) : WeaponTrait;            // Fatal d12 - krytyk zmienia kość obrażeń
-    public sealed record JoustingTrait(Dice.DiceSize Die) : WeaponTrait;         // Jousting d6 - bonus przy walce wierzchem
-    public sealed record TwoHandTrait(Dice.DiceSize Die) : WeaponTrait;          // Two-Hand d10 - kość obrażeń przy chwycie oburącz
-    public sealed record VersatileTrait(WeaponDamageType Damage) : WeaponTrait;  // Versatile P - alternatywny typ obrażeń
-    public sealed record VolleyTrait(int Range) : WeaponTrait;                   // Volley 30 ft. - -2 do ataku poniżej tego dystansu
+    public sealed record DeadlyTrait(Dice.DiceSize Die) : WeaponTrait;
+    public sealed record FatalTrait(Dice.DiceSize Die) : WeaponTrait;
+    public sealed record JoustingTrait(Dice.DiceSize Die) : WeaponTrait;
+    public sealed record TwoHandTrait(Dice.DiceSize Die) : WeaponTrait;
+    public sealed record VersatileTrait(WeaponDamageType Damage) : WeaponTrait;
+    public sealed record VolleyTrait(int Range) : WeaponTrait;
     public sealed record ThrownTrait(int? Range = null) : WeaponTrait;
     public sealed record ModularTrait(params WeaponDamageType[] DamageTypes) : WeaponTrait;
     public sealed record AgileTrait : WeaponTrait;
