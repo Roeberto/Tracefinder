@@ -61,7 +61,7 @@ namespace Tracefinder.Character
             return 10 + AbilityModifier(AbilityScore.Dexterity) + ProficiencyMath.Bonus(classStats.UnarmoredProficiency, Level);
         }
 
-        public int ComputeMaxDc(ClassStats classStats)
+        public int ComputeClassDc(ClassStats classStats)
         {
             return 10 + AbilityModifier(SelectedKeyAbility) + ProficiencyMath.Bonus(classStats.ClassDcProficiency, Level);
         }
