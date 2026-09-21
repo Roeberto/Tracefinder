@@ -56,7 +56,7 @@ namespace Tracefinder.Character
 
         public void decreaseWounded()
         {
-            wounded - Math.Max(wounded - 1, 0);
+            wounded = Math.Max(wounded - 1, 0);
         }
 
         public bool IsUnconscious => CurrentHp <= 0;
