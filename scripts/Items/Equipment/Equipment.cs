@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-using Tracefinder.WeaponStats;
 using Tracefinder.Gameplay;
 
 namespace Tracefinder.Items

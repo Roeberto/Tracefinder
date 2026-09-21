@@ -1,6 +1,6 @@
 using System;
 
-namespace Tracefinder.WeaponStats
+namespace Tracefinder.Items
 {
     public enum WeaponGroup
     {

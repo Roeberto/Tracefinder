@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using Tracefinder.WeaponStats;
+using Tracefinder.Items;
 
 namespace Tracefinder.Character
 {
