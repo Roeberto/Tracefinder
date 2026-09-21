@@ -15,7 +15,7 @@ public static class WeaponList
         Category = WeaponCategory.Martial,
         DamageDice = Dice.DiceSize.D8,
         DamageType = WeaponDamageType.Slashing,
-        DiceNumer = 1,
+        DiceNumber = 1,
         Group = WeaponGroup.Sword,
         Handedness = WeaponHandedness.OneHanded,
         TraitList = [WeaponTrait.Versatile]
