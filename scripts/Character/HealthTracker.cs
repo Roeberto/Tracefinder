@@ -2,64 +2,71 @@ using System;
 
 namespace Tracefinder.Character
 {
-    public class HealthTracker
+
+public class HealthTracker
+{
+    public const int MaxHeroPoints = 3;
+    public const int MaxDying = 4;
+
+    public int MaxHp { get; private set; }
+    public int CurrentHp { get; private set; }
+    public int HeroPoints { get; private set; }
+    public int Dying { get; private set; }
+    public int Wounded { get; private set; }
+
+    public void SetMaxHp(int value)
     {
-        public const int maxHeroPoints = 3;
-        public const int maxDying = 4;
-
-        public int MaxHp { get; private set; }
-        public int CurrentHp { get; private set; }
-        public int heroPoints { get; private set; }
-        public int dying { get; private set; }
-        public int wounded { get; private set; }
-
-
-        public void TakeDamage(int amount)
-        {
-            CurrentHp = Math.Max(CurrentHp - amount, 0);
-        }
-
-        public void HealDamage(int amount)
-        {
-            CurrentHp = Math.Min(CurrentHp + amount, MaxHp);
-        }
-
-        public void SetMaxHp(int MaxHp)
-        {
-            CurrentHp = MaxHp;
-        }
-
-        public void gainHeroPoint()
-        {
-            heroPoints = Math.Min(heroPoints + 1, maxHeroPoints);
-        }
-
-        public void spendHeroPoints()
-        {
-            heroPoints = Math.Max(heroPoints - 1, 0);
-        }
-
-        public void increaseDying()
-        {
-            dying = Math.Min(dying + 1, maxDying);
-        }
-
-        public void decreaseDying()
-        {
-            dying = Math.Max(dying - 1, 0);
-        }
-
-        public void increaseWounded()
-        {
-            wounded++;
-        }
-
-        public void decreaseWounded()
-        {
-            wounded = Math.Max(wounded - 1, 0);
-        }
-
-        public bool IsUnconscious => CurrentHp <= 0;
-
+        MaxHp = value;
+        CurrentHp = Math.Min(CurrentHp, MaxHp);
     }
+
+    public void TakeDamage(int amount)
+    {
+        CurrentHp = Math.Max(CurrentHp - amount, 0);
+    }
+
+    public void HealDamage(int amount)
+    {
+        CurrentHp = Math.Min(CurrentHp + amount, MaxHp);
+    }
+
+    public void SetToMaxHp()
+    {
+        CurrentHp = MaxHp;
+    }
+
+    public void GainHeroPoint()
+    {
+        HeroPoints = Math.Min(HeroPoints + 1, MaxHeroPoints);
+    }
+
+    public void SpendHeroPoint()
+    {
+        HeroPoints = Math.Max(HeroPoints - 1, 0);
+    }
+
+    public void IncreaseDying()
+    {
+        Dying = Math.Min(Dying + 1, MaxDying);
+    }
+
+    public void DecreaseDying()
+    {
+        Dying = Math.Max(Dying - 1, 0);
+    }
+
+    public void IncreaseWounded()
+    {
+        Wounded++;
+    }
+
+    public void DecreaseWounded()
+    {
+        Wounded = Math.Max(Wounded - 1, 0);
+    }
+
+    public bool IsUnconscious => CurrentHp <= 0;
+
+}
+
 }

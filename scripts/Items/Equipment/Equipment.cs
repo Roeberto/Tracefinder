@@ -16,7 +16,7 @@ public static class Equipment
         public WeaponGroup Group;
         public Dice.DiceSize DamageDice;
         public WeaponDamageType DamageType;
-        public int DiceNumer;
+        public int DiceNumber;
         public WeaponHandedness Handedness; 
         public List<WeaponTrait> TraitList;
         public int? RangeIncrement; // null = broń wręcz bez cechy Thrown (nie używa mechaniki range increment)

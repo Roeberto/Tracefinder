@@ -15,12 +15,12 @@ namespace Tracefinder.Character
         public int Intelligence { get; set; } = 10;
         public int Wisdom { get; set; } = 10;
         public int Charisma { get; set; } = 10;
-        public HealthTracker Health { get; set; }
+        public HealthTracker Health { get; set; } = new();
         public string ClassID { get; set; } = ""; // ID klasy postaci np. wojownik = 0
         public AbilityScore SelectedKeyAbility { get; set; } 
         public List<SkillName> ExtraTrainedSkills = new(); //czy postać ma jeszcze jakieś dodatkowe wytrenowane skille
         public int Experience { get; set; } = 0;
-        public Dictionary<ProficiencyRank, WeaponCategory> WeaponProficiency{ get; set;} = new();
+        public Dictionary<WeaponCategory, ProficiencyRank> WeaponProficiency{ get; set;} = new();
 
         // Połączenie zmiennej postaci z clasą AbilityScore
         public int GetScore(AbilityScore ability)
