@@ -10,16 +10,6 @@ namespace Tracefinder.WeaponStats
         Sword
     }
 
-    public enum WeaponTrait
-    {
-        Agile,
-        Deadly,
-        Disarm,
-        Finesse,
-        Thrown,
-        Versatile
-    }
-
     public enum WeaponCategory
     {
         Simple,
@@ -38,6 +28,7 @@ namespace Tracefinder.WeaponStats
     public enum WeaponHandedness
     {
         OneHanded,
-        TwoHanded
+        TwoHanded,
+        OneOrTwoHanded // noszenie w 1 ręce atak w 2 rękach
     }
 }
