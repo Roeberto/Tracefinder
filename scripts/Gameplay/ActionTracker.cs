@@ -4,36 +4,36 @@ namespace Tracefinder.Gameplay
 {
     public class ActionTracker
     {
-        public const int maxMainAction = 3;
-        public const int maxReaction = 1;
+        public const int MaxMainAction = 3;
+        public const int MaxReaction = 1;
 
-        public int mainActions { get; private set; } = maxMainAction;
-        public int reaction { get; private set; } = maxReaction;
+        public int MainActions { get; private set; } = MaxMainAction;
+        public int Reaction { get; private set; } = MaxReaction;
 
-        public void useMainAction(int actionCost)
+        public void UseMainAction(int actionCost)
         {
-            mainActions = Math.Max(mainActions - actionCost, 0);
+            MainActions = Math.Max(MainActions - actionCost, 0);
         }
 
-        public void restoreMainAction(int actionCost)
+        public void RestoreMainAction(int actionCost)
         {
-            mainActions = Math.Min(mainActions + actionCost, maxMainAction);
+            MainActions = Math.Min(MainActions + actionCost, MaxMainAction);
         }
 
         public void UseReaction()
         {
-            reaction = Math.Max(reaction - 1, 0);
+            Reaction = Math.Max(Reaction - 1, 0);
         }
 
         public void RestoreReaction()
         {
-            reaction = Math.Min(reaction + 1, maxReaction);
+            Reaction = Math.Min(Reaction + 1, MaxReaction);
         }
 
         public void ResetTurn()
         {
-            MainActions = maxMainAction;
-            Reaction = maxReaction;
+            MainActions = MaxMainAction;
+            Reaction = MaxReaction;
         }
 
     }
