@@ -41,7 +41,7 @@ public static class WeaponList
         DiceNumber = 1,
         Group = WeaponGroup.Knife,
         Handedness = WeaponHandedness.OneHanded,
-        TraitList = [WeaponTrait.Agile, WeaponTrait.Finesse, WeaponTrait.Thrown],
+        TraitList = [Trait.Agile, Trait.Finesse, Trait.Thrown(10)],
         RangeIncrement = 10
     };
 
@@ -54,7 +54,7 @@ public static class WeaponList
         DiceNumber = 1,
         Group = WeaponGroup.Sword,
         Handedness = WeaponHandedness.OneHanded,
-        TraitList = [WeaponTrait.Deadly, WeaponTrait.Disarm, WeaponTrait.Finesse]
+        TraitList = [Trait.Deadly(Dice.DiceSize.D8), Trait.Disarm, Trait.Finesse]
     };
 
     public static readonly Equipment.Weapon Warhammer = new()
@@ -78,7 +78,7 @@ public static class WeaponList
         DiceNumber = 1,
         Group = WeaponGroup.Bow,
         Handedness = WeaponHandedness.TwoHanded,
-        TraitList = [WeaponTrait.Deadly],
+        TraitList = [Trait.Deadly(Dice.DiceSize.D10)],
         RangeIncrement = 60
     };
 
