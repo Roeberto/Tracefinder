@@ -24,3 +24,6 @@ CLAUDE.md
 
 # Lokalne notatki (backlogi, szkice)
 notatki/
+
+# Lokalne ustawienia edytora (launch.json i tasks.json zostają w repo)
+.vscode/settings.json

@@ -1,5 +1,0 @@
-{
-    "files.exclude": {
-        "**/*.uid": true
-    }
-}
