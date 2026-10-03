@@ -21,3 +21,6 @@ build/
 
 # Lokalny kontekst projektu dla Claude Code
 CLAUDE.md
+
+# Lokalne notatki (backlogi, szkice)
+notatki/
