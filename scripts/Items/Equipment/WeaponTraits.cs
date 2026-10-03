@@ -1,6 +1,6 @@
 using Tracefinder.Gameplay;
 
-namespace Tracefinder.WeaponStats
+namespace Tracefinder.Items
 {
     public abstract record WeaponTrait;
     public sealed record DeadlyTrait(Dice.DiceSize Die) : WeaponTrait;
