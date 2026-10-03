@@ -66,7 +66,7 @@ public static class WeaponList
         DiceNumber = 1,
         Group = WeaponGroup.Hammer,
         Handedness = WeaponHandedness.OneHanded,
-        TraitList = []
+        TraitList = [Trait.Shove]
     };
 
     public static readonly Equipment.Weapon Shortbow = new()
@@ -77,7 +77,7 @@ public static class WeaponList
         DamageType = WeaponDamageType.Piercing,
         DiceNumber = 1,
         Group = WeaponGroup.Bow,
-        Handedness = WeaponHandedness.TwoHanded,
+        Handedness = WeaponHandedness.OneOrTwoHanded,
         TraitList = [Trait.Deadly(Dice.DiceSize.D10)],
         RangeIncrement = 60
     };
@@ -86,7 +86,7 @@ public static class WeaponList
     // inicjalizują się w kolejności tekstowej, więc wcześniej byłyby tu null-e.
     public static readonly IReadOnlyList<Equipment.Weapon> All =
     [
-        Dagger, Longsword, Rapier, Warhammer, Shortbow
+        Dagger, Longsword, Longbow, Rapier, Warhammer, Shortbow
     ];
 
 }
