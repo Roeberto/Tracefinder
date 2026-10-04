@@ -31,4 +31,10 @@ namespace Tracefinder.Items
         TwoHanded,
         OneOrTwoHanded // noszenie w 1 ręce atak w 2 rękach
     }
+
+    public enum WeaponKind
+    {
+        Melee,
+        Ranged
+    }
 }

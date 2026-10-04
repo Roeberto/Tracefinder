@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Tracefinder.Items;
 
 namespace Tracefinder.Character
 {
@@ -18,7 +19,7 @@ namespace Tracefinder.Character
         public ProficiencyRank ClassDcProficiency { get; set; }
         public ProficiencyRank UnarmoredProficiency { get; set; }
         public List<string> Level1Features { get; set; } = new();
-
+        public Dictionary<WeaponCategory, ProficiencyRank> WeaponProficiencies { get; set; } = new();
     }
 
 

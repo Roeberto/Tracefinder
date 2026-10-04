@@ -15,6 +15,7 @@ public static class WeaponList
         DamageType = WeaponDamageType.Slashing,
         DiceNumber = 1,
         Group = WeaponGroup.Sword,
+        Kind = WeaponKind.Melee,
         Handedness = WeaponHandedness.OneHanded,
         TraitList = [Trait.Versatile(WeaponDamageType.Piercing)]
     };
@@ -27,6 +28,7 @@ public static class WeaponList
         DamageType = WeaponDamageType.Piercing,
         DiceNumber = 1,
         Group = WeaponGroup.Bow,
+        Kind = WeaponKind.Ranged,
         Handedness = WeaponHandedness.OneOrTwoHanded,
         RangeIncrement = 100,
         TraitList = [Trait.Deadly(Dice.DiceSize.D8), Trait.Volley(30)],
@@ -40,6 +42,7 @@ public static class WeaponList
         DamageType = WeaponDamageType.Piercing,
         DiceNumber = 1,
         Group = WeaponGroup.Knife,
+        Kind = WeaponKind.Melee,
         Handedness = WeaponHandedness.OneHanded,
         TraitList = [Trait.Agile, Trait.Finesse, Trait.Thrown(10)],
         RangeIncrement = 10
@@ -53,6 +56,7 @@ public static class WeaponList
         DamageType = WeaponDamageType.Piercing,
         DiceNumber = 1,
         Group = WeaponGroup.Sword,
+        Kind = WeaponKind.Melee,
         Handedness = WeaponHandedness.OneHanded,
         TraitList = [Trait.Deadly(Dice.DiceSize.D8), Trait.Disarm, Trait.Finesse]
     };
@@ -65,6 +69,7 @@ public static class WeaponList
         DamageType = WeaponDamageType.Bludgeoning,
         DiceNumber = 1,
         Group = WeaponGroup.Hammer,
+        Kind = WeaponKind.Melee,
         Handedness = WeaponHandedness.OneHanded,
         TraitList = [Trait.Shove]
     };
@@ -77,6 +82,7 @@ public static class WeaponList
         DamageType = WeaponDamageType.Piercing,
         DiceNumber = 1,
         Group = WeaponGroup.Bow,
+        Kind = WeaponKind.Ranged,
         Handedness = WeaponHandedness.OneOrTwoHanded,
         TraitList = [Trait.Deadly(Dice.DiceSize.D10)],
         RangeIncrement = 60

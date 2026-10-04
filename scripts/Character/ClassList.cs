@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Tracefinder.Items;
 
 namespace Tracefinder.Character
 {
@@ -18,6 +19,13 @@ namespace Tracefinder.Character
             WillProficiency = ProficiencyRank.Trained,
             ClassDcProficiency = ProficiencyRank.Trained,
             UnarmoredProficiency = ProficiencyRank.Trained,
+            WeaponProficiencies = new()
+            {
+                [WeaponCategory.Simple] = ProficiencyRank.Expert,
+                [WeaponCategory.Martial] = ProficiencyRank.Expert,
+                [WeaponCategory.Advanced] = ProficiencyRank.Trained,
+                [WeaponCategory.Unarmed] = ProficiencyRank.Expert,
+            },
             Level1Features = ["Attack of Opportunity", "Shield Block"]
         };
 
@@ -34,6 +42,13 @@ namespace Tracefinder.Character
             WillProficiency = ProficiencyRank.Expert,
             ClassDcProficiency = ProficiencyRank.Trained,
             UnarmoredProficiency = ProficiencyRank.Trained,
+            WeaponProficiencies = new()
+            {
+                [WeaponCategory.Simple] = ProficiencyRank.Trained,
+                [WeaponCategory.Martial] = ProficiencyRank.Untrained,
+                [WeaponCategory.Advanced] = ProficiencyRank.Untrained,
+                [WeaponCategory.Unarmed] = ProficiencyRank.Trained,
+            },
             Level1Features = ["Arcane Spellcasting", "Arcane School", "Spellbook"]
         };
 
@@ -50,6 +65,13 @@ namespace Tracefinder.Character
             WillProficiency = ProficiencyRank.Expert,
             ClassDcProficiency = ProficiencyRank.Trained,
             UnarmoredProficiency = ProficiencyRank.Trained,
+            WeaponProficiencies = new()
+            {
+                [WeaponCategory.Simple] = ProficiencyRank.Trained,
+                [WeaponCategory.Martial] = ProficiencyRank.Untrained,
+                [WeaponCategory.Advanced] = ProficiencyRank.Untrained,
+                [WeaponCategory.Unarmed] = ProficiencyRank.Trained,
+            },
             Level1Features = ["Divine Spellcasting", "Divine Font", "Doctrine"]
         };
 
@@ -66,6 +88,13 @@ namespace Tracefinder.Character
             WillProficiency = ProficiencyRank.Expert,
             ClassDcProficiency = ProficiencyRank.Trained,
             UnarmoredProficiency = ProficiencyRank.Trained,
+            WeaponProficiencies = new()
+            {
+                [WeaponCategory.Simple] = ProficiencyRank.Trained,
+                [WeaponCategory.Martial] = ProficiencyRank.Untrained,
+                [WeaponCategory.Advanced] = ProficiencyRank.Untrained,
+                [WeaponCategory.Unarmed] = ProficiencyRank.Trained,
+            },
             Level1Features = ["Rogue's Racket (Thief)", "Sneak Attack", "Surprise Attack"]
         };
 
