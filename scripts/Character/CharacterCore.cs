@@ -20,7 +20,6 @@ namespace Tracefinder.Character
         public AbilityScore SelectedKeyAbility { get; set; } 
         public List<SkillName> ExtraTrainedSkills = new(); //czy postać ma jeszcze jakieś dodatkowe wytrenowane skille
         public int Experience { get; set; } = 0;
-        public Dictionary<WeaponCategory, ProficiencyRank> WeaponProficiency{ get; set;} = new();
 
         // Połączenie zmiennej postaci z clasą AbilityScore
         public int GetScore(AbilityScore ability)
@@ -101,8 +100,28 @@ namespace Tracefinder.Character
             return bonus + bonusFromAbilityScore;
         }
         
+        public ProficiencyRank GetWeaponRank(Equipment.Weapon weapon, ClassStats classStats)
+        {
+            return classStats.WeaponProficiencies.GetValueOrDefault(weapon.Category);
+        }
 
+        public AbilityScore AttackAbility(Equipment.Weapon weapon)
+        {
+            if (weapon.Kind == WeaponKind.Ranged)
+                return AbilityScore.Dexterity;
+            
+            if (weapon.HasTrait<FinesseTrait>() && Dexterity > Strength)
+                return AbilityScore.Dexterity;
 
+            return AbilityScore.Strength;
+        }
+
+        public int ComputeAttackBonus(Equipment.Weapon weapon, ClassStats classStats)
+        {
+            int proficiencyBonus = ProficiencyMath.Bonus(GetWeaponRank(weapon, classStats), Level);
+            return proficiencyBonus + AbilityModifier(AttackAbility(weapon));
+            
+        }
 
 
 

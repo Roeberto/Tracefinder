@@ -6,53 +6,64 @@ using Tracefinder.Gameplay;
 namespace Tracefinder.Items
 {
 
-public static class Equipment
-{
-    public class Weapon
+    public static class Equipment
     {
-        public string Name;
-        public WeaponCategory Category; 
-        public WeaponGroup Group;
-        public Dice.DiceSize DamageDice;
-        public WeaponDamageType DamageType;
-        public int DiceNumber;
-        public WeaponHandedness Handedness; 
-        public int HandsToCarry => Handedness == WeaponHandedness.TwoHanded ? 2 : 1;
-        public int HandsToAttack => Handedness == WeaponHandedness.OneHanded ? 1 : 2;
-        public List<WeaponTrait> TraitList;
-        public int? RangeIncrement; // null = broń wręcz bez cechy Thrown (nie używa mechaniki range increment)
-        public int ActionsToReload; // ile akcji zajmuje przeładowanie
-        public List<WeaponDamageType> PossibleDamageTypes()
+        public class Weapon
         {
-            List<WeaponDamageType> types = new();
-            types.Add(DamageType);
-
-            foreach (WeaponTrait trait in TraitList)
+            public string Name;
+            public WeaponCategory Category;
+            public WeaponGroup Group;
+            public WeaponKind Kind;
+            public Dice.DiceSize DamageDice;
+            public WeaponDamageType DamageType;
+            public int DiceNumber;
+            public WeaponHandedness Handedness;
+            public int HandsToCarry => Handedness == WeaponHandedness.TwoHanded ? 2 : 1;
+            public int HandsToAttack => Handedness == WeaponHandedness.OneHanded ? 1 : 2;
+            public List<WeaponTrait> TraitList = new();
+            public int? RangeIncrement; // null = broń wręcz bez cechy Thrown (nie używa mechaniki range increment)
+            public int ActionsToReload; // ile akcji zajmuje przeładowanie
+            public List<WeaponDamageType> PossibleDamageTypes()
             {
-                if (trait is VersatileTrait versatile)
-                {
-                    types.Add(versatile.Damage);
-                }
+                List<WeaponDamageType> types = new();
+                types.Add(DamageType);
 
-                if (trait is ModularTrait modular)
+                foreach (WeaponTrait trait in TraitList)
                 {
-                    foreach (WeaponDamageType type in modular.DamageTypes)
+                    if (trait is VersatileTrait versatile)
                     {
-                        if (!types.Contains(type))
-                            types.Add(type);
+                        types.Add(versatile.Damage);
+                    }
+
+                    if (trait is ModularTrait modular)
+                    {
+                        foreach (WeaponDamageType type in modular.DamageTypes)
+                        {
+                            if (!types.Contains(type))
+                                types.Add(type);
+                        }
                     }
                 }
+
+                return types;
             }
-
-            return types;
-        }
-
-        public bool CanDeal(WeaponDamageType type)
-        {
-            return PossibleDamageTypes().Contains(type);
+            
+            public bool HasTrait<T>() where T:WeaponTrait
+            {
+                foreach (WeaponTrait trait in TraitList)
+                {
+                    if (trait is T)
+                        return true;
+                }
+                return false;
+            }
+            
+            public bool CanDeal(WeaponDamageType type)
+            {
+                return PossibleDamageTypes().Contains(type);
+            }
         }
     }
-}
 
 }
 
