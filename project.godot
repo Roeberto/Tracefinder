@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Tracefinder"
-run/main_scene="uid://bspanb6t4g5vj"
+run/main_scene="uid://dkuv8gwheyalj"
 config/features=PackedStringArray("4.7", "C#", "Mobile")
 
 [display]
