@@ -24,7 +24,10 @@ namespace Tracefinder.Character
         string AncestryName,
         List<SkillName> ExtraTrainedSkills,
         string WeaponName,
-        List<string> FeatNames);
+        List<string> FeatNames,
+        Dictionary<SkillName, ProficiencyRank> SkillIncreases = null,
+        int SkillIncreasesUsed = 0,
+        List<AbilityScore> AttributeBoosts = null);
 
     // Zapis postaci jako pliki JSON. Stan HP nie jest zapisywany, wczytana postać jest w pełni sił.
     public class CharacterRepository
@@ -53,6 +56,12 @@ namespace Tracefinder.Character
                 .Select(path => Path.GetFileNameWithoutExtension(path))
                 .OrderBy(name => name, StringComparer.CurrentCulture)
                 .ToList();
+        }
+
+        public bool Exists(string name)
+        {
+            string fileName = FileNameFor(name);
+            return fileName.Length > 0 && File.Exists(Path.Combine(_directory, fileName + Extension));
         }
 
         public void Save(CharacterCore character)
@@ -103,7 +112,10 @@ namespace Tracefinder.Character
                 c.ClassID, c.SelectedKeyAbility, c.Ancestry?.Name,
                 c.ExtraTrainedSkills.ToList(),
                 c.EquippedWeapon?.Name,
-                c.Feats.Select(f => f.Name).ToList());
+                c.Feats.Select(f => f.Name).ToList(),
+                new Dictionary<SkillName, ProficiencyRank>(c.SkillIncreases),
+                c.SkillIncreasesUsed,
+                c.AttributeBoosts.ToList());
         }
 
         public static CharacterCore FromSave(CharacterSave s)
@@ -121,9 +133,13 @@ namespace Tracefinder.Character
                 Charisma = s.Charisma,
                 ClassID = s.ClassName,
                 SelectedKeyAbility = s.KeyAbility,
-                Ancestry = AncestryList.All.FirstOrDefault(a => a.Name == s.AncestryName)
+                Ancestry = AncestryList.All.FirstOrDefault(a => a.Name == s.AncestryName),
+                SkillIncreasesUsed = s.SkillIncreasesUsed
             };
             core.ExtraTrainedSkills.AddRange(s.ExtraTrainedSkills ?? new List<SkillName>());
+            core.AttributeBoosts.AddRange(s.AttributeBoosts ?? new List<AbilityScore>());
+            foreach (KeyValuePair<SkillName, ProficiencyRank> increase in s.SkillIncreases ?? new Dictionary<SkillName, ProficiencyRank>())
+                core.SkillIncreases[increase.Key] = increase.Value;
 
             Equipment.Weapon weapon = WeaponList.All.FirstOrDefault(w => w.Name == s.WeaponName);
             if (weapon != null)

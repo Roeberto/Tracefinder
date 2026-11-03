@@ -23,6 +23,7 @@ namespace Tracefinder.UI
 
             GetNode<Button>("%MenuButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/MainMenu.tscn");
             GetNode<Button>("%EditButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/CharacterCreator.tscn");
+            GetNode<Button>("%LevelUpButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/LevelUp.tscn");
             GetNode<Button>("%RestButton").Pressed += () => Change(() => _character.Health.FullRest());
             GetNode<Button>("%HealButton").Pressed += () => Change(() => _character.Health.HealDamage(Amount()));
             GetNode<Button>("%DamageButton").Pressed += () => Change(() => _character.Health.TakeDamage(Amount()));
@@ -58,6 +59,9 @@ namespace Tracefinder.UI
             GetNode<Label>("%PortraitLetter").Text = _character.Name.Length > 0 ? _character.Name.Substring(0, 1).ToUpperInvariant() : "?";
             GetNode<Label>("%SubtitleLabel").Text = $"{ancestry} {_class.Name}";
             GetNode<Label>("%LevelLabel").Text = $"Poziom {_character.Level}, {_character.Experience} z {Progression.ExperiencePerLevel} XP";
+
+            int pending = LevelUp.PendingChoices(_character, _class);
+            GetNode<Button>("%LevelUpButton").Text = pending > 0 ? $"Rozwój ({pending})" : "Rozwój";
 
             foreach (AbilityScore ability in System.Enum.GetValues<AbilityScore>())
                 GetNode<AbilityCard>($"%{ability}Card").SetValues(UiText.AbilityName(ability), _character.GetScore(ability), _character.AbilityModifier(ability));

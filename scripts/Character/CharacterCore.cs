@@ -22,6 +22,8 @@ namespace Tracefinder.Character
         public AbilityScore SelectedKeyAbility { get; set; }
         public List<SkillName> ExtraTrainedSkills = new(); //czy postać ma jeszcze jakieś dodatkowe wytrenowane skille
         public Dictionary<SkillName, ProficiencyRank> SkillIncreases = new(); // rangi podniesione przy awansach, ponad Trained
+        public int SkillIncreasesUsed { get; set; } = 0;
+        public List<AbilityScore> AttributeBoosts = new(); // wydane przyrosty cech, w kolejności wyboru
         public int Experience { get; set; } = 0;
         public Ancestry Ancestry { get; set; }
         public List<Feat> Feats = new();
@@ -51,6 +53,33 @@ namespace Tracefinder.Character
                     throw new ArgumentException($"Unknown ability: {ability}");
             }
 
+        }
+
+        public void SetScore(AbilityScore ability, int value)
+        {
+            switch (ability)
+            {
+                case AbilityScore.Strength:
+                    Strength = value;
+                    break;
+                case AbilityScore.Dexterity:
+                    Dexterity = value;
+                    break;
+                case AbilityScore.Constitution:
+                    Constitution = value;
+                    break;
+                case AbilityScore.Intelligence:
+                    Intelligence = value;
+                    break;
+                case AbilityScore.Wisdom:
+                    Wisdom = value;
+                    break;
+                case AbilityScore.Charisma:
+                    Charisma = value;
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown ability: {ability}");
+            }
         }
 
         // Wylicz jaki jest dodatek do AbilityScore zależnie od lvl i proficiency
@@ -173,12 +202,16 @@ namespace Tracefinder.Character
             }
 
             if (gained > 0)
-            {
-                int oldMax = Health.MaxHp;
-                Health.SetMaxHp(ComputeMaxHp(classStats));
-                Health.HealDamage(Health.MaxHp - oldMax);
-            }
+                RefreshHealth(classStats);
             return gained;
+        }
+
+        // Po zmianie poziomu albo Kondycji: nowe maksimum, a różnica dochodzi do aktualnego HP
+        public void RefreshHealth(ClassStats classStats)
+        {
+            int oldMax = Health.MaxHp;
+            Health.SetMaxHp(ComputeMaxHp(classStats));
+            Health.HealDamage(Health.MaxHp - oldMax);
         }
 
         // Ustawia pełne HP. Bez tego świeża postać ma MaxHp i CurrentHp równe 0.

@@ -29,6 +29,7 @@ namespace Tracefinder.Combat
         public int ExperienceAwarded { get; private set; }
         public List<string> Log { get; } = new();
         public event Action<string> LogAdded;
+        public event Action Finished;
 
         public Combatant Current => State == EncounterState.InProgress ? _order[_turnIndex] : null;
 
@@ -124,6 +125,7 @@ namespace Tracefinder.Combat
             Write(Winner == Side.Party ? "Drużyna wygrywa starcie." : "Drużyna przegrywa starcie.");
             if (Winner == Side.Party)
                 AwardExperience();
+            Finished?.Invoke();
             return true;
         }
 

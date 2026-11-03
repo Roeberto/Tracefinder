@@ -60,11 +60,20 @@ namespace Tracefinder.UI
             GetNode<Button>("%InteractButton").Pressed += OnInteract;
             GetNode<Button>("%EndTurnButton").Pressed += OnEndTurn;
             GetNode<Button>("%BackButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/MainMenu.tscn");
+            GetNode<Button>("%LevelUpButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/LevelUp.tscn");
+            _encounter.Finished += OnFinished;
             _strikeOption.ItemSelected += _ => OnStrikeChanged();
             _damageOption.ItemSelected += _ => Refresh();
 
             Refresh();
             RunEnemyTurns();
+        }
+
+        private void OnFinished()
+        {
+            CharacterCore character = GameSession.CurrentCharacter();
+            CharacterStorage.SaveIfAlreadyStored(character);
+            GetNode<Button>("%LevelUpButton").Visible = LevelUp.PendingChoices(character, GameSession.CharacterClass) > 0;
         }
 
         private bool IsPlayerTurn => _encounter.Current?.Side == Tracefinder.Combat.Side.Party;

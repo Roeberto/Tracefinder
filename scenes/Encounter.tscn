@@ -196,6 +196,13 @@ autowrap_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="LevelUpButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Rozwój postaci"
+custom_minimum_size = Vector2(0, 40)
+visible = false
+
 [node name="BackButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
 unique_name_in_owner = true
 layout_mode = 2

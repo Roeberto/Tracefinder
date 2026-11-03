@@ -85,6 +85,13 @@ theme_override_colors/font_color = Color(0.62, 0.64, 0.66, 1)
 theme_override_font_sizes/font_size = 13
 text = ""
 
+[node name="LevelUpButton" type="Button" parent="Margin/Root/Header/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Rozwój"
+size_flags_vertical = 4
+custom_minimum_size = Vector2(150, 0)
+
 [node name="RestButton" type="Button" parent="Margin/Root/Header/Row"]
 unique_name_in_owner = true
 layout_mode = 2
