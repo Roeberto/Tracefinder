@@ -331,12 +331,11 @@ theme_override_colors/font_color = Color(0.55, 0.57, 0.59, 1)
 theme_override_font_sizes/font_size = 13
 text = "Background"
 
-[node name="BackgroundValueLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/BackgroundRow/BackgroundRowBox"]
+[node name="BackgroundOption" type="OptionButton" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/BackgroundRow/BackgroundRowBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.57, 0.59, 1)
-theme_override_font_sizes/font_size = 12
-text = "nie wybrano"
+size_flags_horizontal = 3
+clip_text = true
 
 [node name="WeaponRow" type="PanelContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
 layout_mode = 2
@@ -964,3 +963,8 @@ text = "Otwórz arkusz"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Zapisz postać"
+
+[node name="StartButton" type="Button" parent="Margin/RootVBox/BottomBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Rozpocznij przygodę"

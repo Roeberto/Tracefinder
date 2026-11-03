@@ -2,7 +2,9 @@ Tracefinder
 
 Gra 2D top-down tworzona w Godot Engine 4.7 (.NET / C#).
 
-Projekt na wczesnym etapie prototypu — obecnie zaimplementowany jest świat oparty na kafelkach oraz sterowana postać gracza z animacjami kierunkowymi.
+Turowe RPG na zasadach Pathfinder 2e. Tworzysz bohatera jednej z czterech klas, wędrujesz po świecie generowanym z ziarna, walczysz na siatce, kupujesz sprzęt w osadach, niszczysz trzy leża i pokonujesz Władcę Popiołów w Popielnej Twierdzy.
+
+Chodzenie: strzałki lub WASD. Gra zapisuje się sama, a Kontynuuj w menu wczytuje ostatni stan.
 
 Wymagania
 Godot Engine 4.7.2 – wersja .NET (zwykły build bez .NET nie uruchomi tego projektu)

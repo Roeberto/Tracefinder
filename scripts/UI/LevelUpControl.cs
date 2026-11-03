@@ -19,6 +19,11 @@ namespace Tracefinder.UI
 
             GetNode<Button>("%SheetButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/CharacterSheet.tscn");
             GetNode<Button>("%AwardButton").Pressed += OnAward;
+            // W kampanii XP przychodzi tylko z walk
+            bool free = GameSession.Campaign == null;
+            GetNode<Button>("%AwardButton").Visible = free;
+            GetNode<SpinBox>("%XpAmount").Visible = free;
+            GetNode<Label>("%XpTitle").Visible = free;
             Refresh();
         }
 

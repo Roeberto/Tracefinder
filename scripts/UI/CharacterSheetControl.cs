@@ -21,10 +21,16 @@ namespace Tracefinder.UI
             if (_character.Health.MaxHp == 0)
                 _character.InitializeHealth(_class);
 
-            GetNode<Button>("%MenuButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/MainMenu.tscn");
+            bool inCampaign = GameSession.Campaign != null;
+            Button back = GetNode<Button>("%MenuButton");
+            back.Text = inCampaign ? "Wróć na mapę" : "Menu";
+            back.Pressed += () => GetTree().ChangeSceneToFile(inCampaign ? "res://scenes/Exploration.tscn" : "res://scenes/MainMenu.tscn");
+            // W kampanii HP i Hero Pointy zmieniają się tylko w grze, a nie ręcznie z arkusza
+            foreach (string path in new[] { "%EditButton", "%RestButton", "%HeroPlus", "%HeroMinus", "%HealButton", "%DamageButton", "%HpAmount" })
+                GetNode<Control>(path).Visible = !inCampaign;
             GetNode<Button>("%EditButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/CharacterCreator.tscn");
             GetNode<Button>("%LevelUpButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/LevelUp.tscn");
-            GetNode<Button>("%RestButton").Pressed += () => Change(() => _character.Health.FullRest());
+            GetNode<Button>("%RestButton").Pressed += () => Change(() => _character.Rest());
             GetNode<Button>("%HealButton").Pressed += () => Change(() => _character.Health.HealDamage(Amount()));
             GetNode<Button>("%DamageButton").Pressed += () => Change(() => _character.Health.TakeDamage(Amount()));
             GetNode<Button>("%HeroPlus").Pressed += () => Change(() => _character.Health.GainHeroPoint());
@@ -57,7 +63,7 @@ namespace Tracefinder.UI
             string ancestry = _character.Ancestry?.Name ?? "Bez rodowodu";
             GetNode<Label>("%NameLabel").Text = _character.Name.Length > 0 ? _character.Name : "Bezimienny";
             GetNode<Label>("%PortraitLetter").Text = _character.Name.Length > 0 ? _character.Name.Substring(0, 1).ToUpperInvariant() : "?";
-            GetNode<Label>("%SubtitleLabel").Text = $"{ancestry} {_class.Name}";
+            GetNode<Label>("%SubtitleLabel").Text = _character.Background != null ? $"{ancestry} {_class.Name}, {_character.Background.Name}" : $"{ancestry} {_class.Name}";
             GetNode<Label>("%LevelLabel").Text = $"Poziom {_character.Level}, {_character.Experience} z {Progression.ExperiencePerLevel} XP";
 
             int pending = LevelUp.PendingChoices(_character, _class);
@@ -92,7 +98,7 @@ namespace Tracefinder.UI
                     _character.ComputeSkillBonus(pair.Key, _class));
             }
 
-            GetNode<Label>("%InitiativeValue").Text = UiText.Signed(_character.ComputePerception(_class));
+            GetNode<Label>("%InitiativeValue").Text = UiText.Signed(_character.ComputeInitiative(_class));
             GetNode<Label>("%AcValue").Text = _character.ComputeMaxAc(_class).ToString();
             GetNode<Label>("%ClassDcValue").Text = _character.ComputeClassDc(_class).ToString();
             GetNode<Label>("%ConditionsLabel").Text = ConditionsText(health);
@@ -138,6 +144,11 @@ namespace Tracefinder.UI
             AddRow(list, "Zaawansowane bronie", _class.RankAt(ProficiencyStat.AdvancedWeapons, level));
             AddRow(list, "Ataki bez broni", _class.RankAt(ProficiencyStat.UnarmedAttacks, level));
             AddRow(list, "Bez pancerza", _class.RankAt(ProficiencyStat.Unarmored, level));
+            AddRow(list, "Lekkie pancerze", _class.RankAt(ProficiencyStat.LightArmor, level));
+            AddRow(list, "Średnie pancerze", _class.RankAt(ProficiencyStat.MediumArmor, level));
+            AddRow(list, "Ciężkie pancerze", _class.RankAt(ProficiencyStat.HeavyArmor, level));
+            if (_class.SpellcastingProficiency != ProficiencyRank.Untrained)
+                AddRow(list, "Zaklęcia", _class.RankAt(ProficiencyStat.Spellcasting, level));
             AddRow(list, "Class DC", _class.RankAt(ProficiencyStat.ClassDc, level));
         }
 
@@ -170,12 +181,35 @@ namespace Tracefinder.UI
                 list.AddChild(new Label { Text = $"Cechy: {traits}", AutowrapMode = TextServer.AutowrapMode.WordSmart });
 
             list.AddChild(new Label { Text = "Kolejne ataki w turze mają karę MAP: -5 i -10, a przy Agile -4 i -8." });
+            FillSpells(list);
+        }
+
+        private void FillSpells(VBoxContainer list)
+        {
+            IReadOnlyList<Spell> spells = SpellList.For(_class);
+            if (spells.Count == 0)
+                return;
+
+            list.AddChild(new HSeparator());
+            list.AddChild(new Label { Text = $"Zaklęcia: atak {UiText.Signed(_character.ComputeSpellAttack(_class))}, DC {_character.ComputeSpellDc(_class)}" });
+            List<string> slots = new();
+            for (int rank = 1; rank <= SpellSlots.HighestRank(_character.Level); rank++)
+                slots.Add($"ranga {rank}: {_character.FreeSlots(rank)}");
+            if (_class.Name == ClassList.Cleric.Name)
+                slots.Add($"Divine Font: {_character.FreeFontSlots(_class)}");
+            list.AddChild(new Label { Text = "Wolne sloty: " + string.Join(", ", slots) });
+            foreach (Spell spell in spells)
+            {
+                string rank = spell.IsCantrip ? "sztuczka" : $"ranga {spell.BaseRank}";
+                list.AddChild(new Label { Text = $"{spell.Name} ({rank}, {spell.Actions} akcje, {spell.RangeFeet} stóp): {spell.Summary}", AutowrapMode = TextServer.AutowrapMode.WordSmart });
+            }
         }
 
         private void FillInventory()
         {
             VBoxContainer list = GetNode<VBoxContainer>("%InventoryList");
             Clear(list);
+            list.AddChild(new Label { Text = $"Sakiewka: {UiText.Money(_character.Silver)}" });
             foreach (CarriedWeapon weapon in _character.Inventory)
             {
                 HBoxContainer row = new();
@@ -183,9 +217,37 @@ namespace Tracefinder.UI
                 bool equipped = weapon == _character.EquippedWeapon;
                 Button button = new() { Text = equipped ? "Założona" : "Załóż", Disabled = equipped };
                 CarriedWeapon captured = weapon;
-                button.Pressed += () => Change(() => _character.EquippedWeapon = captured);
+                button.Pressed += () => Change(() =>
+                {
+                    _character.EquippedWeapon = captured;
+                    CharacterStorage.SaveIfAlreadyStored(_character);
+                });
                 row.AddChild(button);
                 list.AddChild(row);
+            }
+
+            foreach (Armor armor in _character.OwnedArmors)
+            {
+                HBoxContainer row = new();
+                row.AddChild(new Label { Text = $"{armor.Name} (AC +{armor.AcBonus}, limit ZRĘ {armor.DexCap})", SizeFlagsHorizontal = SizeFlags.ExpandFill });
+                bool worn = armor == _character.EquippedArmor;
+                Button button = new() { Text = worn ? "Założony" : "Załóż", Disabled = worn };
+                Armor captured = armor;
+                button.Pressed += () => Change(() =>
+                {
+                    _character.EquippedArmor = captured;
+                    CharacterStorage.SaveIfAlreadyStored(_character);
+                });
+                row.AddChild(button);
+                list.AddChild(row);
+            }
+
+            if (_character.HasShield)
+                list.AddChild(new Label { Text = $"Stalowa tarcza: {_character.ShieldHp} z {ShopCatalog.ShieldMaxHp} HP" });
+            foreach (KeyValuePair<string, int> potion in _character.Potions)
+            {
+                if (potion.Value > 0)
+                    list.AddChild(new Label { Text = $"{potion.Key} x{potion.Value}" });
             }
         }
 

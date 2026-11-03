@@ -46,34 +46,16 @@ theme_override_font_sizes/font_size = 18
 text = "Pathfinder 2e"
 horizontal_alignment = 1
 
-[node name="PlayButton" type="Button" parent="Center/Buttons"]
+[node name="NewGameButton" type="Button" parent="Center/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Graj"
+text = "Nowa gra"
 custom_minimum_size = Vector2(0, 52)
 
-[node name="WorldButton" type="Button" parent="Center/Buttons"]
+[node name="ContinueButton" type="Button" parent="Center/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Mapa świata"
-custom_minimum_size = Vector2(0, 52)
-
-[node name="EncounterButton" type="Button" parent="Center/Buttons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Walka testowa"
-custom_minimum_size = Vector2(0, 52)
-
-[node name="CreatorButton" type="Button" parent="Center/Buttons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Kreator postaci"
-custom_minimum_size = Vector2(0, 52)
-
-[node name="SheetButton" type="Button" parent="Center/Buttons"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Arkusz postaci"
+text = "Kontynuuj"
 custom_minimum_size = Vector2(0, 52)
 
 [node name="QuitButton" type="Button" parent="Center/Buttons"]
@@ -81,3 +63,12 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Wyjście"
 custom_minimum_size = Vector2(0, 52)
+
+[node name="MenuMessage" type="Label" parent="Center/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.64, 0.66, 1)
+theme_override_font_sizes/font_size = 15
+text = "Stwórz bohatera, zniszcz trzy leża, zdobądź klucze i pokonaj Władcę Popiołów."
+horizontal_alignment = 1
+autowrap_mode = 2

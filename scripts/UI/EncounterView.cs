@@ -28,6 +28,8 @@ namespace Tracefinder.UI
         private Mode _mode;
         private Combatant _shownUnit;
         private bool _enemyTurnRunning;
+        private EncounterPlan _plan;
+        private int _levelBeforeFight;
 
         private const double EnemyActionDelaySeconds = 0.45;
 
@@ -46,10 +48,19 @@ namespace Tracefinder.UI
             if (character.Health.IsUnconscious)
                 character.Health.FullRest();
 
-            Location location = GameSession.PendingLocation ?? LocationGenerator.Generate(GameSession.WorldSeed, 0, 0, Biome.Plains);
-            GameSession.PendingLocation = null;
+            _plan = GameSession.PendingPlan;
+            GameSession.PendingPlan = null;
+            _levelBeforeFight = character.Level;
+            if (_plan != null && GameSession.Campaign != null)
+            {
+                _encounter = GameSession.Campaign.BuildEncounter(_plan);
+            }
+            else
+            {
+                Location location = LocationGenerator.Generate(GameSession.WorldSeed, 0, 0, Biome.Plains);
+                _encounter = GameSession.CreateEncounter(location, character, classStats);
+            }
 
-            _encounter = GameSession.CreateEncounter(location, character, classStats);
             _encounter.LogAdded += line => _log.AddText(line + "\n");
             _encounter.Start();
             _grid.Encounter = _encounter;
@@ -68,6 +79,7 @@ namespace Tracefinder.UI
             GetNode<Button>("%EndTurnButton").Pressed += OnEndTurn;
             GetNode<Button>("%BackButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/MainMenu.tscn");
             GetNode<Button>("%LevelUpButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/LevelUp.tscn");
+            GetNode<Button>("%ContinueButton").Pressed += OnContinue;
             _encounter.Finished += OnFinished;
             _strikeOption.ItemSelected += _ => OnStrikeChanged();
             _damageOption.ItemSelected += _ => Refresh();
@@ -79,8 +91,57 @@ namespace Tracefinder.UI
         private void OnFinished()
         {
             CharacterCore character = GameSession.CurrentCharacter();
-            CharacterStorage.SaveIfAlreadyStored(character);
-            GetNode<Button>("%LevelUpButton").Visible = LevelUp.PendingChoices(character, GameSession.CharacterClass) > 0;
+            bool won = _encounter.Winner == Tracefinder.Combat.Side.Party;
+            if (_plan != null && GameSession.Campaign != null)
+                FinishCampaignFight(won);
+            else
+                CharacterStorage.SaveIfAlreadyStored(character);
+
+            GetNode<Button>("%LevelUpButton").Visible = won && LevelUp.PendingChoices(character, GameSession.CharacterClass) > 0;
+        }
+
+        // Porażki nie zapisujemy, żeby autozapis sprzed walki pozostał do wczytania
+        private void FinishCampaignFight(bool won)
+        {
+            Button next = GetNode<Button>("%ContinueButton");
+            next.Visible = true;
+            if (!won)
+                return;
+
+            VictoryReward reward = GameSession.Campaign.ResolveVictory(_plan, _levelBeforeFight);
+            string line = $"Łup: {UiText.Money(reward.Silver)}";
+            if (reward.Potion != null)
+                line += $" i {reward.Potion.Name}";
+            _log.AddText(line + ".\n");
+            if (reward.LevelsGained > 0)
+                _log.AddText($"Awans na poziom {GameSession.Campaign.Hero.Level}! Hero Point +{reward.LevelsGained}.\n");
+            CampaignStorage.Save();
+        }
+
+        private void OnContinue()
+        {
+            bool won = _encounter.Winner == Tracefinder.Combat.Side.Party;
+            if (!won || GameSession.Campaign.Completed)
+            {
+                GameSession.EndingVictory = won;
+                GetTree().ChangeSceneToFile("res://scenes/Ending.tscn");
+                return;
+            }
+            GetTree().ChangeSceneToFile("res://scenes/Exploration.tscn");
+        }
+
+        // Pola podświetlone dla obecnej akcji, do testów interfejsu bez okna
+        public Godot.Collections.Array<Vector2I> HighlightedCells()
+        {
+            Godot.Collections.Array<Vector2I> cells = new();
+            foreach (GridPos pos in _grid.Highlighted)
+                cells.Add(new Vector2I(pos.X, pos.Y));
+            return cells;
+        }
+
+        public Vector2I GridSize()
+        {
+            return new Vector2I(_encounter.Grid.Width, _encounter.Grid.Height);
         }
 
         private bool IsPlayerTurn => _encounter.Current?.Side == Tracefinder.Combat.Side.Party;

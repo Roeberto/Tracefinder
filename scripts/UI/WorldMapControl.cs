@@ -1,8 +1,10 @@
 using Godot;
+using Tracefinder.Character;
 using Tracefinder.World;
 
 namespace Tracefinder.UI
 {
+    // Wybór świata przed rozpoczęciem przygody
     public partial class WorldMapControl : Control
     {
         private WorldMapCanvas _canvas;
@@ -22,9 +24,11 @@ namespace Tracefinder.UI
                 _seed.Text = GD.RandRange(1, 999999).ToString();
                 Generate();
             };
-            GetNode<Button>("%BackButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/MainMenu.tscn");
-            _canvas.CellClicked += OnCellClicked;
-            _canvas.CellHovered += (x, y) => _info.Text = $"{WorldMapCanvas.NameFor(_canvas.Map[x, y])} ({x}, {y})";
+            GetNode<Button>("%BackButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/CharacterCreator.tscn");
+            Button start = GetNode<Button>("%StartButton");
+            start.Disabled = GameSession.PendingHero == null;
+            start.Pressed += OnStart;
+            _canvas.CellHovered += OnHover;
 
             HBoxContainer legend = GetNode<HBoxContainer>("Margin/Root/Legend");
             foreach (Biome biome in System.Enum.GetValues<Biome>())
@@ -36,6 +40,12 @@ namespace Tracefinder.UI
             Generate();
         }
 
+        private void OnHover(int x, int y)
+        {
+            Site site = _canvas.Campaign?.SiteAt(x, y);
+            _info.Text = site != null ? site.Name : WorldMapCanvas.NameFor(_canvas.Map[x, y]);
+        }
+
         private void Generate()
         {
             if (!int.TryParse(_seed.Text, out int seed))
@@ -43,22 +53,23 @@ namespace Tracefinder.UI
                 _info.Text = "Ziarno musi być liczbą całkowitą.";
                 return;
             }
-            GameSession.WorldSeed = seed;
-            _canvas.Map = WorldMap.Generate(seed);
+
+            // Podgląd na przykładowej postaci: bohater dostanie sakiewkę dopiero na starcie
+            Campaign preview = Campaign.New(seed, GameSession.ExampleCharacter());
+            GameSession.WorldSeed = preview.Seed;
+            _seed.Text = preview.Seed.ToString();
+            _canvas.Map = preview.Map;
+            _canvas.Campaign = preview;
             _canvas.QueueRedraw();
-            _info.Text = "Kliknij lokalizację, aby rozpocząć walkę.";
+            _info.Text = "Złote kropki to osady, czerwone to leża, a czarna to Popielna Twierdza.";
         }
 
-        private void OnCellClicked(int x, int y)
+        private void OnStart()
         {
-            Biome biome = _canvas.Map[x, y];
-            if (!WorldMap.IsVisitable(biome))
-            {
-                _info.Text = "Na wodzie nie można stoczyć walki.";
-                return;
-            }
-            GameSession.PendingLocation = LocationGenerator.Generate(_canvas.Map.Seed, x, y, biome);
-            GetTree().ChangeSceneToFile("res://scenes/Encounter.tscn");
+            GameSession.Campaign = Campaign.New(GameSession.WorldSeed, GameSession.PendingHero);
+            GameSession.PendingHero = null;
+            CampaignStorage.Save();
+            GetTree().ChangeSceneToFile("res://scenes/Exploration.tscn");
         }
     }
 }

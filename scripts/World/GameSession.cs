@@ -6,18 +6,23 @@ using Tracefinder.Items;
 
 namespace Tracefinder.World
 {
-    // Stan przekazywany między scenami: aktualna postać, świat i lokalizacja wybrana do walki
+    // Stan przekazywany między scenami: kampania, aktualna postać i zaplanowana walka
     public static class GameSession
     {
         public static CharacterCore Character { get; set; }
         public static int WorldSeed { get; set; } = 2026;
-        public static Location PendingLocation { get; set; }
+        public static Campaign Campaign { get; set; }
+        public static CharacterCore PendingHero { get; set; }
+        public static EncounterPlan PendingPlan { get; set; }
+        public static bool EndingVictory { get; set; }
 
         public static ClassStats CharacterClass => ClassList.ByName(CurrentCharacter().ClassID) ?? ClassList.Fighter;
 
         // Bez utworzonej postaci sceny korzystają z przykładowego Wojownika
         public static CharacterCore CurrentCharacter()
         {
+            if (Campaign != null)
+                return Campaign.Hero;
             Character ??= ExampleCharacter();
             return Character;
         }

@@ -9,6 +9,7 @@ namespace Tracefinder.UI
         public event Action<int, int> CellClicked;
         public event Action<int, int> CellHovered;
         public WorldMap Map { get; set; }
+        public Campaign Campaign { get; set; }
 
         public static Color ColorFor(Biome biome)
         {
@@ -40,7 +41,7 @@ namespace Tracefinder.UI
                 case Biome.Mountains:
                     return "Góry";
                 default:
-                    return "Osada";
+                    return "Ruiny";
             }
         }
 
@@ -65,6 +66,29 @@ namespace Tracefinder.UI
                 for (int x = 0; x < Map.Width; x++)
                     DrawRect(new Rect2(origin + new Vector2(x, y) * cell, new Vector2(cell, cell)), ColorFor(Map[x, y]));
             }
+
+            if (Campaign != null)
+                DrawMarkers(cell, origin);
+        }
+
+        private void DrawMarkers(float cell, Vector2 origin)
+        {
+            float radius = Mathf.Max(cell * 0.75f, 3);
+            foreach (Site site in Campaign.Sites)
+            {
+                Vector2 center = origin + new Vector2(site.X + 0.5f, site.Y + 0.5f) * cell;
+                Color color = site.Kind switch
+                {
+                    SiteKind.Town => new Color(1f, 0.85f, 0.35f),
+                    SiteKind.Fortress => new Color(0.05f, 0.05f, 0.07f),
+                    _ => Campaign.IsCleared(site) ? new Color(0.55f, 0.55f, 0.55f) : new Color(0.9f, 0.15f, 0.2f)
+                };
+                DrawCircle(center, radius + 1, new Color(1, 1, 1));
+                DrawCircle(center, radius, color);
+            }
+
+            Vector2 hero = origin + new Vector2(Campaign.X + 0.5f, Campaign.Y + 0.5f) * cell;
+            DrawArc(hero, radius + 3, 0, Mathf.Tau, 24, new Color(1, 1, 1), 2);
         }
 
         public override void _GuiInput(InputEvent @event)

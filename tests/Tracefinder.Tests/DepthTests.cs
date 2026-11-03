@@ -74,6 +74,17 @@ namespace Tracefinder.Tests
         }
 
         [Fact]
+        public void ToughnessTakenAtLevelUpRaisesHitPointsAtOnce()
+        {
+            CharacterCore c = Core(ClassList.Fighter, level: 3);
+            c.InitializeHealth(ClassList.Fighter);
+            int before = c.Health.MaxHp;
+            Assert.True(LevelUp.TakeFeat(c, ClassList.Fighter, FeatList.Toughness));
+            Assert.Equal(before + 3, c.Health.MaxHp);
+            Assert.Equal(before + 3, c.Health.CurrentHp);
+        }
+
+        [Fact]
         public void NaturalAmbitionAndGeneralTrainingAddSlots()
         {
             CharacterCore c = Core(ClassList.Fighter);

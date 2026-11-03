@@ -1,0 +1,184 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/UI/ExplorationView.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/UI/ExplorationMap.cs" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="3"]
+[ext_resource type="Script" path="res://scripts/UI/WorldMapCanvas.cs" id="4"]
+
+[node name="Exploration" type="Node2D"]
+script = ExtResource("1")
+
+[node name="MapLayer" type="Node2D" parent="."]
+script = ExtResource("2")
+
+[node name="Player" parent="." instance=ExtResource("3")]
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="Root" type="Control" parent="Hud"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="PanelContainer" parent="Hud/Root"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 96.0
+grow_horizontal = 2
+
+[node name="Row" type="HBoxContainer" parent="Hud/Root/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Info" type="VBoxContainer" parent="Hud/Root/TopBar/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="HeroLabel" type="Label" parent="Hud/Root/TopBar/Row/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="StatsLabel" type="Label" parent="Hud/Root/TopBar/Row/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+
+[node name="ObjectiveLabel" type="Label" parent="Hud/Root/TopBar/Row/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.91, 0.36, 0.38, 1)
+
+[node name="SheetButton" type="Button" parent="Hud/Root/TopBar/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+custom_minimum_size = Vector2(116, 44)
+text = "Arkusz"
+
+[node name="LevelUpButton" type="Button" parent="Hud/Root/TopBar/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+custom_minimum_size = Vector2(116, 44)
+text = "Rozwój"
+
+[node name="CampButton" type="Button" parent="Hud/Root/TopBar/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+custom_minimum_size = Vector2(116, 44)
+text = "Rozbij obóz"
+
+[node name="TreatButton" type="Button" parent="Hud/Root/TopBar/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+custom_minimum_size = Vector2(116, 44)
+text = "Opatrz rany"
+
+[node name="MenuButton" type="Button" parent="Hud/Root/TopBar/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+custom_minimum_size = Vector2(116, 44)
+text = "Menu"
+
+[node name="MiniMap" type="Control" parent="Hud/Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -300.0
+offset_top = 108.0
+offset_right = -12.0
+offset_bottom = 300.0
+grow_horizontal = 0
+mouse_filter = 2
+script = ExtResource("4")
+
+[node name="MessageLabel" type="Label" parent="Hud/Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -36.0
+offset_right = -12.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+text = "Strzałki lub WASD: chodzenie po świecie."
+mouse_filter = 2
+
+[node name="SitePanel" type="PanelContainer" parent="Hud/Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -210.0
+offset_right = 300.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Box" type="VBoxContainer" parent="Hud/Root/SitePanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SiteName" type="Label" parent="Hud/Root/SitePanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="SiteDescription" type="Label" parent="Hud/Root/SitePanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+size_flags_vertical = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Hud/Root/SitePanel/Box"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="SiteActionButton" type="Button" parent="Hud/Root/SitePanel/Box/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+custom_minimum_size = Vector2(200, 44)
+text = "Odpocznij"
+
+[node name="ShopButton" type="Button" parent="Hud/Root/SitePanel/Box/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+custom_minimum_size = Vector2(200, 44)
+text = "Sklep"
+

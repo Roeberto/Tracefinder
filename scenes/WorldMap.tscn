@@ -73,13 +73,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.62, 0.64, 0.66, 1)
 theme_override_font_sizes/font_size = 15
-text = "Kliknij lokalizację, aby rozpocząć walkę."
+text = ""
 
 [node name="BackButton" type="Button" parent="Margin/Root/TopBar/Row"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Menu"
+text = "Wróć"
 custom_minimum_size = Vector2(120, 0)
+
+[node name="StartButton" type="Button" parent="Margin/Root/TopBar/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Rozpocznij w tym świecie"
+custom_minimum_size = Vector2(260, 0)
 
 [node name="MapCanvas" type="Control" parent="Margin/Root"]
 unique_name_in_owner = true

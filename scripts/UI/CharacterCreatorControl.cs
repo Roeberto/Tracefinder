@@ -11,6 +11,9 @@ namespace Tracefinder.UI
     {
         private const int MinScore = 8;
         private const int MaxScore = 18;
+        // Tyle punktów modyfikatorów daje postać poziomu 1 z PF2e: rodowód 2, tło 2, klasa 1 i 4 dowolne.
+        // Kreator nie modeluje samych przyrostów, ale pilnuje tej sumy.
+        private const int MaxModifierSum = 9;
 
         private readonly Dictionary<AbilityScore, LineEdit> _inputs = new();
         private readonly Dictionary<AbilityScore, Label> _modifiers = new();
@@ -21,6 +24,7 @@ namespace Tracefinder.UI
         private OptionButton _keyAbility;
         private OptionButton _ancestry;
         private OptionButton _weapon;
+        private OptionButton _background;
         private OptionButton _ancestryFeat;
         private OptionButton _classFeat;
         private readonly List<Feat> _ancestryFeats = new();
@@ -35,6 +39,7 @@ namespace Tracefinder.UI
             _keyAbility = GetNode<OptionButton>("%KeyAbilityOption");
             _ancestry = GetNode<OptionButton>("%AncestryOption");
             _weapon = GetNode<OptionButton>("%WeaponOption");
+            _background = GetNode<OptionButton>("%BackgroundOption");
             _ancestryFeat = GetNode<OptionButton>("%AncestryFeatOption");
             _classFeat = GetNode<OptionButton>("%ClassFeatOption");
             _message = GetNode<Label>("%ErrorLabel");
@@ -53,6 +58,8 @@ namespace Tracefinder.UI
                 _ancestry.AddItem(ancestry.Name);
             foreach (Equipment.Weapon weapon in WeaponList.All)
                 _weapon.AddItem(weapon.Name);
+            foreach (Background background in BackgroundList.All)
+                _background.AddItem($"{background.Name} ({UiText.SkillName(background.TrainedSkill)})");
 
             VBoxContainer skillList = GetNode<VBoxContainer>("%SkillsList");
             foreach (SkillName skill in SkillCatalog.All)
@@ -65,6 +72,7 @@ namespace Tracefinder.UI
 
             _classOption.ItemSelected += _ => OnClassChanged();
             _keyAbility.ItemSelected += _ => Recalculate();
+            _background.ItemSelected += _ => Recalculate();
             _ancestry.ItemSelected += _ =>
             {
                 RebuildFeats(FeatCategory.Ancestry, _ancestryFeat, _ancestryFeats, AncestryList.All[_ancestry.Selected].Name, null);
@@ -73,6 +81,7 @@ namespace Tracefinder.UI
             _name.TextChanged += _ => ShowMessage("");
             GetNode<Button>("%SaveButton").Pressed += Save;
             GetNode<Button>("%SheetButton").Pressed += OpenSheet;
+            GetNode<Button>("%StartButton").Pressed += OnStart;
             GetNode<Button>("%BackButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/MainMenu.tscn");
             GetNode<Button>("%NewCharacterButton").Pressed += () =>
             {
@@ -81,7 +90,26 @@ namespace Tracefinder.UI
             };
 
             RefreshSavedList();
-            Fill(GameSession.CurrentCharacter());
+            // Formularz opisuje postać poziomu 1, więc rozwiniętej postaci nie wolno przez niego przepuścić
+            CharacterCore current = GameSession.PendingHero ?? GameSession.CurrentCharacter();
+            Fill(current.Level == 1 ? current : GameSession.ExampleCharacter());
+        }
+
+        private void OnStart()
+        {
+            CharacterCore core = ReadForm(out string error);
+            if (core == null)
+            {
+                ShowMessage(error);
+                return;
+            }
+            if (CharacterRepository.FileNameFor(core.Name).Length == 0)
+            {
+                ShowMessage("Wpisz nazwę postaci, żeby rozpocząć przygodę.");
+                return;
+            }
+            GameSession.PendingHero = core;
+            GetTree().ChangeSceneToFile("res://scenes/WorldMap.tscn");
         }
 
         private ClassStats SelectedClass => ClassList.All[_classOption.Selected];
@@ -139,10 +167,31 @@ namespace Tracefinder.UI
                 pair.Value.Disabled = fromClass;
                 pair.Value.SetPressedNoSignal(fromClass || extra.Contains(pair.Key));
             }
+            RefreshBackgroundSkill();
+        }
+
+        // Umiejętność z tła jest już wytrenowana, więc nie wymaga osobnego wyboru
+        private void RefreshBackgroundSkill()
+        {
+            if (_background.Selected < 0)
+                return;
+            SkillName fromBackground = BackgroundList.All[_background.Selected].TrainedSkill;
+            foreach (KeyValuePair<SkillName, CheckBox> pair in _skills)
+            {
+                bool fromClass = SelectedClass.TrainedSkills.Contains(pair.Key);
+                bool fixedSkill = fromClass || pair.Key == fromBackground;
+                pair.Value.Disabled = fixedSkill;
+                if (fixedSkill)
+                    pair.Value.SetPressedNoSignal(true);
+                else if (pair.Value.Disabled)
+                    pair.Value.SetPressedNoSignal(false);
+            }
         }
 
         private void Fill(CharacterCore source)
         {
+            int backgroundIndex = BackgroundList.All.ToList().FindIndex(b => b == source.Background);
+            _background.Select(backgroundIndex >= 0 ? backgroundIndex : 0);
             _name.Text = source.Name;
             foreach (KeyValuePair<AbilityScore, LineEdit> pair in _inputs)
                 pair.Value.Text = source.GetScore(pair.Key).ToString();
@@ -171,7 +220,8 @@ namespace Tracefinder.UI
                 Name = _name.Text.Trim(),
                 ClassID = SelectedClass.Name,
                 Ancestry = AncestryList.All[_ancestry.Selected],
-                SelectedKeyAbility = SelectedClass.KeyAbilityOptions[_keyAbility.Selected]
+                SelectedKeyAbility = SelectedClass.KeyAbilityOptions[_keyAbility.Selected],
+                Background = _background.Selected >= 0 ? BackgroundList.All[_background.Selected] : null
             };
 
             Dictionary<AbilityScore, int> scores = new();
@@ -191,9 +241,16 @@ namespace Tracefinder.UI
             core.Wisdom = scores[AbilityScore.Wisdom];
             core.Charisma = scores[AbilityScore.Charisma];
 
+            int modifierSum = System.Enum.GetValues<AbilityScore>().Sum(core.AbilityModifier);
+            if (modifierSum > MaxModifierSum)
+            {
+                error = $"Za wysokie cechy: suma modyfikatorów to {modifierSum}, a można najwyżej {MaxModifierSum}.";
+                return null;
+            }
+
             foreach (KeyValuePair<SkillName, CheckBox> pair in _skills)
             {
-                if (pair.Value.ButtonPressed && !SelectedClass.TrainedSkills.Contains(pair.Key))
+                if (pair.Value.ButtonPressed && !SelectedClass.TrainedSkills.Contains(pair.Key) && core.Background?.TrainedSkill != pair.Key)
                     core.ExtraTrainedSkills.Add(pair.Key);
             }
 
@@ -221,6 +278,7 @@ namespace Tracefinder.UI
 
         private void Recalculate()
         {
+            RefreshBackgroundSkill();
             CharacterCore core = ReadForm(out string error);
             ShowMessage(error ?? "");
             if (core == null)
@@ -279,6 +337,14 @@ namespace Tracefinder.UI
                 return;
             }
 
+            // Formularz tworzy postać poziomu 1, więc nie może nadpisać już rozwiniętej
+            CharacterCore existing = _repository.Load(core.Name);
+            if (existing != null && existing.Level > 1)
+            {
+                ShowMessage($"Postać {core.Name} ma już poziom {existing.Level}. Wybierz inną nazwę.");
+                return;
+            }
+
             _repository.Save(core);
             GameSession.Character = core;
             RefreshSavedList();
@@ -321,6 +387,11 @@ namespace Tracefinder.UI
                 return;
             }
             GameSession.Character = core;
+            if (core.Level > 1)
+            {
+                GetTree().ChangeSceneToFile("res://scenes/CharacterSheet.tscn");
+                return;
+            }
             Fill(core);
             ShowMessage($"Wczytano postać {name}.");
         }

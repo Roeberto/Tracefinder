@@ -47,6 +47,7 @@ namespace Tracefinder.Character
                 return false;
 
             core.Feats.Add(feat);
+            core.RefreshHealth(classStats);
             return true;
         }
 
