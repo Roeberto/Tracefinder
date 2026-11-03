@@ -1,0 +1,137 @@
+[gd_resource type="Theme" load_steps=10 format=3]
+
+[ext_resource type="StyleBox" path="res://resources/ui/panel_card.tres" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="btn_normal"]
+bg_color = Color(0.122, 0.129, 0.137, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.757, 0.153, 0.176, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="btn_hover"]
+bg_color = Color(0.2, 0.17, 0.18, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.757, 0.153, 0.176, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="btn_pressed"]
+bg_color = Color(0.757, 0.153, 0.176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.757, 0.153, 0.176, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="btn_disabled"]
+bg_color = Color(0.122, 0.129, 0.137, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.31, 0.33, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="input"]
+bg_color = Color(0.122, 0.129, 0.137, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.31, 0.33, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="bar_back"]
+bg_color = Color(0.122, 0.129, 0.137, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxFlat" id="bar_fill"]
+bg_color = Color(0.757, 0.153, 0.176, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxEmpty" id="empty"]
+
+[resource]
+default_font_size = 16
+Label/colors/font_color = Color(0.93, 0.94, 0.95, 1)
+PanelContainer/styles/panel = ExtResource("1")
+Button/colors/font_color = Color(0.93, 0.94, 0.95, 1)
+Button/colors/font_disabled_color = Color(0.62, 0.64, 0.66, 1)
+Button/styles/normal = SubResource("btn_normal")
+Button/styles/hover = SubResource("btn_hover")
+Button/styles/pressed = SubResource("btn_pressed")
+Button/styles/disabled = SubResource("btn_disabled")
+OptionButton/colors/font_color = Color(0.93, 0.94, 0.95, 1)
+OptionButton/colors/font_disabled_color = Color(0.62, 0.64, 0.66, 1)
+OptionButton/styles/normal = SubResource("btn_normal")
+OptionButton/styles/hover = SubResource("btn_hover")
+OptionButton/styles/pressed = SubResource("btn_pressed")
+OptionButton/styles/disabled = SubResource("btn_disabled")
+TabContainer/styles/panel = ExtResource("1")
+ProgressBar/styles/background = SubResource("bar_back")
+ProgressBar/styles/fill = SubResource("bar_fill")
+CheckBox/colors/font_color = Color(0.93, 0.94, 0.95, 1)
+CheckBox/colors/font_disabled_color = Color(0.62, 0.64, 0.66, 1)
+CheckBox/styles/normal = SubResource("empty")
+CheckBox/styles/hover = SubResource("empty")
+CheckBox/styles/pressed = SubResource("empty")
+CheckBox/styles/hover_pressed = SubResource("empty")
+CheckBox/styles/disabled = SubResource("empty")
+LineEdit/styles/normal = SubResource("input")
+SpinBox/styles/normal = SubResource("input")
+TextEdit/styles/normal = SubResource("input")

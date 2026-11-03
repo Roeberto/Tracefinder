@@ -31,7 +31,7 @@ public static class WeaponList
         Kind = WeaponKind.Ranged,
         Handedness = WeaponHandedness.OneOrTwoHanded,
         RangeIncrement = 100,
-        TraitList = [Trait.Deadly(Dice.DiceSize.D8), Trait.Volley(30)],
+        TraitList = [Trait.Deadly(Dice.DiceSize.D10), Trait.Volley(30)],
     };
 
     public static readonly Equipment.Weapon Dagger = new()

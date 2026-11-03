@@ -1,4 +1,5 @@
 using System;
+using Tracefinder.Gameplay;
 
 namespace Tracefinder.Character
 {
@@ -14,25 +15,92 @@ public class HealthTracker
     public int Dying { get; private set; }
     public int Wounded { get; private set; }
 
+    // Potwory zwykle giną od razu przy 0 HP, bez stanu Dying
+    public bool DiesAtZeroHp { get; set; }
+
     public void SetMaxHp(int value)
     {
         MaxHp = value;
         CurrentHp = Math.Min(CurrentHp, MaxHp);
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, bool criticalHit = false)
     {
+        bool wasDown = CurrentHp <= 0;
         CurrentHp = Math.Max(CurrentHp - amount, 0);
+
+        if (CurrentHp > 0 || DiesAtZeroHp || amount <= 0)
+            return;
+
+        int gain = criticalHit ? 2 : 1;
+        // Wounded dolicza się tylko przy nowym powaleniu, nie przy kolejnych obrażeniach
+        int total = wasDown ? Dying + gain : Dying + gain + Wounded;
+        Dying = Math.Min(total, MaxDying);
     }
 
     public void HealDamage(int amount)
     {
+        if (amount <= 0)
+            return;
+
+        bool wasDown = CurrentHp <= 0;
         CurrentHp = Math.Min(CurrentHp + amount, MaxHp);
+
+        if (wasDown && CurrentHp > 0 && Dying > 0)
+        {
+            Dying = 0;
+            IncreaseWounded();
+        }
     }
 
     public void SetToMaxHp()
     {
         CurrentHp = MaxHp;
+    }
+
+    // Pełny odpoczynek: komplet HP i koniec stanów Dying oraz Wounded
+    public void FullRest()
+    {
+        CurrentHp = MaxHp;
+        Dying = 0;
+        Wounded = 0;
+    }
+
+    // Płaski test na początku tury postaci umierającej, DC 10 + Dying
+    public Check.Result RecoveryCheck()
+    {
+        Check.Result result = Check.Roll(0, 10 + Dying);
+        ApplyRecovery(result.Degree);
+        return result;
+    }
+
+    public void ApplyRecovery(DegreeOfSuccess degree)
+    {
+        if (Dying <= 0)
+            return;
+
+        switch (degree)
+        {
+            case DegreeOfSuccess.CriticalSuccess:
+                Dying -= 2;
+                break;
+            case DegreeOfSuccess.Success:
+                Dying -= 1;
+                break;
+            case DegreeOfSuccess.Failure:
+                Dying += 1;
+                break;
+            case DegreeOfSuccess.CriticalFailure:
+                Dying += 2;
+                break;
+        }
+
+        if (Dying <= 0)
+        {
+            Dying = 0;
+            IncreaseWounded();
+        }
+        Dying = Math.Min(Dying, MaxDying);
     }
 
     public void GainHeroPoint()
@@ -65,7 +133,34 @@ public class HealthTracker
         Wounded = Math.Max(Wounded - 1, 0);
     }
 
+    public void ClearWounded()
+    {
+        Wounded = 0;
+    }
+
+    // Odtworzenie stanu z zapisu gry
+    public void Restore(int currentHp, int dying, int wounded, int heroPoints)
+    {
+        CurrentHp = Math.Clamp(currentHp, 0, MaxHp);
+        Dying = Math.Clamp(dying, 0, MaxDying);
+        Wounded = Math.Max(wounded, 0);
+        HeroPoints = Math.Clamp(heroPoints, 0, MaxHeroPoints);
+    }
+
+    // Heroiczne ocalenie: wszystkie Hero Pointy za uniknięcie śmierci
+    public bool SpendAllHeroPointsToSurvive()
+    {
+        if (HeroPoints <= 0)
+            return false;
+        HeroPoints = 0;
+        Dying = 0;
+        CurrentHp = Math.Max(CurrentHp, 1);
+        return true;
+    }
+
     public bool IsUnconscious => CurrentHp <= 0;
+
+    public bool IsDead => DiesAtZeroHp ? CurrentHp <= 0 : Dying >= MaxDying;
 
 }
 

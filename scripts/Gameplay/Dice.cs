@@ -9,6 +9,12 @@ public class Dice
 
     static Random rnd = new Random();
 
+    // Stałe ziarno daje powtarzalne rzuty, np. w testach
+    public static void SetSeed(int seed)
+    {
+        rnd = new Random(seed);
+    }
+
     public enum DiceSize
     {
         D4,

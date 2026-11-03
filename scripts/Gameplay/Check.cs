@@ -26,7 +26,11 @@ namespace Tracefinder.Gameplay
 		public static Result Roll(int bonus, int dc)
 		{
 			int natural = Dice.Roll(Dice.DiceSize.D20, 1);
-			int total = natural + bonus;
+			return Evaluate(natural, natural + bonus, dc);
+		}
+
+		public static Result Evaluate(int natural, int total, int dc)
+		{
 			DegreeOfSuccess degree = Determine(total,dc);
 			if (natural == 20)
 				degree = Shift(degree, +1);

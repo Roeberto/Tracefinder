@@ -9,6 +9,17 @@ namespace Tracefinder.Gameplay
 
         public int MainActions { get; private set; } = MaxMainAction;
         public int Reaction { get; private set; } = MaxReaction;
+        public int AttacksThisTurn { get; private set; }
+
+        public bool CanUseMainAction(int actionCost)
+        {
+            return MainActions >= actionCost;
+        }
+
+        public void RegisterAttack()
+        {
+            AttacksThisTurn++;
+        }
 
         public void UseMainAction(int actionCost)
         {
@@ -34,6 +45,7 @@ namespace Tracefinder.Gameplay
         {
             MainActions = MaxMainAction;
             Reaction = MaxReaction;
+            AttacksThisTurn = 0;
         }
 
     }

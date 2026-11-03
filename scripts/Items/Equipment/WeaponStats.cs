@@ -4,9 +4,21 @@ namespace Tracefinder.Items
 {
     public enum WeaponGroup
     {
+        Axe,
+        Bomb,
         Bow,
+        Brawling,
+        Club,
+        Crossbow,
+        Dart,
+        Flail,
         Hammer,
         Knife,
+        Pick,
+        Polearm,
+        Shield,
+        Sling,
+        Spear,
         Sword
     }
 
