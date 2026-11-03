@@ -261,7 +261,7 @@ namespace Tracefinder.Combat
             string sign = bonus >= 0 ? "+" : "-";
             string summary = $"{attacker.Name} atakuje {target.Name} ({strike.Name}): {roll.Natural} {sign} {Math.Abs(bonus)} = {roll.Total} przeciw AC {roll.Dc}, {DegreeName(roll.Degree)}";
             if (amount > 0)
-                summary += $", {amount} obrażeń ({DamageTypeName(type)})";
+                summary += $", obrażenia: {amount} ({DamageTypeName(type)})";
             ActionResult result = Done(summary + ".");
 
             if (target.IsOut)

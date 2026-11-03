@@ -286,6 +286,19 @@ namespace Tracefinder.Tests
         }
 
         [Fact]
+        public void FullRestClearsEverything()
+        {
+            HealthTracker h = Hero();
+            h.TakeDamage(10, true);
+            h.IncreaseWounded();
+            h.FullRest();
+            Assert.Equal(10, h.CurrentHp);
+            Assert.Equal(0, h.Dying);
+            Assert.Equal(0, h.Wounded);
+            Assert.False(h.IsDead);
+        }
+
+        [Fact]
         public void MonsterDiesAtZeroHp()
         {
             HealthTracker h = Hero(5);

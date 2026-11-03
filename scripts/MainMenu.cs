@@ -1,40 +1,24 @@
 using Godot;
-using System;
-using System.Reflection.Metadata;
 
-
-public partial class MainMenu : Node2D
+namespace Tracefinder
 {
 
-	[Export] private Button _PlayButton;
-	[Export] private Button _SettingsButton;
-	[Export] private Button _QuitButton;
-
-	// Called when the node enters the scene tree for the first time.
+public partial class MainMenu : Control
+{
 	public override void _Ready()
 	{
-
-		_PlayButton.Pressed += OnPlayButtonPressed;
-		_QuitButton.Pressed += OnQuitButtonPressed;
-		
+		Connect("%PlayButton", "res://scenes/WorldView.tscn");
+		Connect("%WorldButton", "res://scenes/WorldMap.tscn");
+		Connect("%EncounterButton", "res://scenes/Encounter.tscn");
+		Connect("%CreatorButton", "res://scenes/CharacterCreator.tscn");
+		Connect("%SheetButton", "res://scenes/CharacterSheet.tscn");
+		GetNode<Button>("%QuitButton").Pressed += () => GetTree().Quit();
 	}
 
-	private void OnPlayButtonPressed()
+	private void Connect(string button, string scene)
 	{
-		GetTree().ChangeSceneToFile("res://scenes/WorldView.tscn");
+		GetNode<Button>(button).Pressed += () => GetTree().ChangeSceneToFile(scene);
 	}
-	private void OnQuitButtonPressed()
-	{
-		GetTree().Quit();
-	}
-
-
-
-	public override void _Process(double delta)
-	{
-	}
-
-
-
+}
 
 }

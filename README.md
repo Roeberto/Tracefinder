@@ -6,11 +6,11 @@ Projekt na wczesnym etapie prototypu — obecnie zaimplementowany jest świat op
 
 Wymagania
 Godot Engine 4.7.2 – wersja .NET (zwykły build bez .NET nie uruchomi tego projektu)
-.NET SDK 9.0
+.NET SDK 10.0
 
 Na Fedorze:
 
-sudo dnf install dotnet-sdk-9.0
+sudo dnf install dotnet-sdk-10.0
 
 Godota w wersji .NET pobierz ze strony godotengine.org/download/linux — plik oznaczony jako „Godot Engine – .NET".
 
@@ -23,4 +23,10 @@ Następnie:
 
 Otwórz projekt w Godocie (Import → wskaż project.godot)
 Kliknij przycisk Build (ikona młotka w prawym górnym rogu) — projekty C# wymagają kompilacji przed pierwszym uruchomieniem
-Uruchom scenę scenes/WorldView.tscn klawiszem F6
+Uruchom grę klawiszem F5, zaczyna się od menu głównego (scenes/MainMenu.tscn)
+
+Testy
+
+Testy zasad, walki i generatora świata nie wymagają Godota:
+
+dotnet test tests/Tracefinder.Tests

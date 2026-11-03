@@ -58,6 +58,14 @@ public class HealthTracker
         CurrentHp = MaxHp;
     }
 
+    // Pełny odpoczynek: komplet HP i koniec stanów Dying oraz Wounded
+    public void FullRest()
+    {
+        CurrentHp = MaxHp;
+        Dying = 0;
+        Wounded = 0;
+    }
+
     // Płaski test na początku tury postaci umierającej, DC 10 + Dying
     public Check.Result RecoveryCheck()
     {
