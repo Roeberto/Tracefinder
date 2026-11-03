@@ -6,6 +6,13 @@ namespace Tracefinder.UI
 {
     public static class UiText
     {
+        public static string Money(int silver)
+        {
+            int gold = silver / Items.ShopCatalog.SilverPerGold;
+            int rest = silver % Items.ShopCatalog.SilverPerGold;
+            return rest == 0 ? $"{gold} gp" : gold == 0 ? $"{rest} sp" : $"{gold} gp {rest} sp";
+        }
+
         public static string Signed(int value)
         {
             return value >= 0 ? $"+{value}" : value.ToString();

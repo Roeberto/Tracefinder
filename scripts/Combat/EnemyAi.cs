@@ -13,7 +13,7 @@ namespace Tracefinder.Combat
         public static bool TakeAction(Encounter encounter)
         {
             Combatant unit = encounter.Current;
-            if (unit == null || !unit.Actions.CanUseMainAction(1))
+            if (unit == null || unit.IsOut || !unit.Actions.CanUseMainAction(1))
                 return false;
 
             Combatant foe = NearestFoe(encounter, unit);
@@ -22,9 +22,31 @@ namespace Tracefinder.Combat
 
             StrikeOption strike = BestStrike(encounter, unit, foe);
             if (strike != null)
+            {
+                // Trzeci atak przy karze MAP rzadko trafia, więc łucznik woli wtedy odsunąć się od celu
+                bool pointless = unit.Actions.AttacksThisTurn >= 2 && strike.Weapon.Kind == WeaponKind.Ranged;
+                if (pointless)
+                    return StepAway(encounter, unit, foe);
                 return encounter.Strike(foe, strike).Success;
+            }
 
             return MoveToward(encounter, unit, foe);
+        }
+
+        private static bool StepAway(Encounter encounter, Combatant unit, Combatant foe)
+        {
+            int current = BattleGrid.DistanceFeet(unit.Position, foe.Position);
+            GridPos? best = null;
+            foreach (GridPos target in encounter.StepTargets())
+            {
+                int distance = BattleGrid.DistanceFeet(target, foe.Position);
+                if (distance > current)
+                {
+                    current = distance;
+                    best = target;
+                }
+            }
+            return best.HasValue && encounter.Step(best.Value).Success;
         }
 
         public static void PlayTurn(Encounter encounter)

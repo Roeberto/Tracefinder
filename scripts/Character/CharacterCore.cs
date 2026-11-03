@@ -29,8 +29,25 @@ namespace Tracefinder.Character
         public List<Feat> Feats = new();
         public List<CarriedWeapon> Inventory = new();
         public CarriedWeapon EquippedWeapon { get; set; }
+        public Armor EquippedArmor { get; set; }
+        public List<Armor> OwnedArmors = new();
+        public bool HasShield { get; set; }
+        public int ShieldHp { get; set; } = ShopCatalog.ShieldMaxHp;
+        public Dictionary<string, int> Potions = new(); // nazwa mikstury i ile sztuk
+        public int Silver { get; set; }
+        public Background Background { get; set; }
+        public Dictionary<int, int> SpellSlotsUsed = new(); // ranga i ile slotów zużyto
+        public int FontSlotsUsed { get; set; }
 
-        public int SpeedFeet => Ancestry?.SpeedFeet ?? DefaultSpeedFeet;
+        public int SpeedFeet => (Ancestry?.SpeedFeet ?? DefaultSpeedFeet) + (HasFeat(FeatList.Fleet) ? 5 : 0);
+
+        // Tarcza poniżej progu jest uszkodzona i nie daje premii, dopóki kowal w osadzie jej nie naprawi
+        public bool ShieldUsable => HasShield && ShieldHp > ShopCatalog.ShieldBrokenThreshold;
+
+        public bool HasFeat(Feat feat)
+        {
+            return Feats.Exists(f => f.Name == feat.Name);
+        }
 
         // Połączenie zmiennej postaci z clasą AbilityScore
         public int GetScore(AbilityScore ability)
@@ -91,12 +108,19 @@ namespace Tracefinder.Character
         public int ComputeMaxHp(ClassStats classStats)
         {
             int ancestryHp = Ancestry?.HitPoints ?? 0;
-            return ancestryHp + (AbilityModifier(AbilityScore.Constitution) + classStats.HitPointsPerLevel) * Level;
+            int toughness = HasFeat(FeatList.Toughness) ? Level : 0;
+            return ancestryHp + (AbilityModifier(AbilityScore.Constitution) + classStats.HitPointsPerLevel) * Level + toughness;
         }
 
         public int ComputeMaxAc(ClassStats classStats)
         {
-            return 10 + AbilityModifier(AbilityScore.Dexterity) + Bonus(classStats, ProficiencyStat.Unarmored);
+            int dexterity = AbilityModifier(AbilityScore.Dexterity);
+            if (EquippedArmor == null)
+                return 10 + dexterity + Bonus(classStats, ProficiencyStat.Unarmored);
+
+            int capped = Math.Min(dexterity, EquippedArmor.DexCap);
+            ProficiencyRank rank = classStats.ArmorRankAt(EquippedArmor.Category, Level);
+            return 10 + capped + ProficiencyMath.Bonus(rank, Level) + EquippedArmor.AcBonus;
         }
 
         public int ComputeClassDc(ClassStats classStats)
@@ -124,6 +148,90 @@ namespace Tracefinder.Character
             return Bonus(classStats, ProficiencyStat.Perception) + AbilityModifier(AbilityScore.Wisdom);
         }
 
+        public int ComputeInitiative(ClassStats classStats)
+        {
+            return ComputePerception(classStats) + (HasFeat(FeatList.IncredibleInitiative) ? 2 : 0);
+        }
+
+        public int ComputeSpellAttack(ClassStats classStats)
+        {
+            return Bonus(classStats, ProficiencyStat.Spellcasting) + AbilityModifier(SelectedKeyAbility);
+        }
+
+        public int ComputeSpellDc(ClassStats classStats)
+        {
+            return 10 + ComputeSpellAttack(classStats);
+        }
+
+        public int SneakAttackDice(ClassStats classStats)
+        {
+            if (classStats.Name != ClassList.Rogue.Name)
+                return 0;
+            if (Level >= 17)
+                return 4;
+            if (Level >= 11)
+                return 3;
+            return Level >= 5 ? 2 : 1;
+        }
+
+        public int FreeSlots(int rank)
+        {
+            return Math.Max(SpellSlots.SlotsAt(Level, rank) - SpellSlotsUsed.GetValueOrDefault(rank), 0);
+        }
+
+        public int FreeFontSlots(ClassStats classStats)
+        {
+            if (classStats.Name != ClassList.Cleric.Name)
+                return 0;
+            return Math.Max(SpellSlots.FontSlots(Level) - FontSlotsUsed, 0);
+        }
+
+        // Najwyższa wolna ranga dla zaklęcia. Zero oznacza, że nie ma czym rzucić.
+        public int CastingRank(Spell spell, ClassStats classStats)
+        {
+            List<int> ranks = CastingRanks(spell, classStats);
+            return ranks.Count > 0 ? ranks[0] : 0;
+        }
+
+        // Rangi, na których można teraz rzucić zaklęcie, od najwyższej
+        public List<int> CastingRanks(Spell spell, ClassStats classStats)
+        {
+            List<int> ranks = new();
+            if (spell.IsCantrip)
+            {
+                ranks.Add(SpellSlots.CantripRank(Level));
+                return ranks;
+            }
+            int highest = SpellSlots.HighestRank(Level);
+            for (int rank = highest; rank >= spell.BaseRank; rank--)
+            {
+                bool font = rank == highest && spell.Name == SpellList.Heal.Name && FreeFontSlots(classStats) > 0;
+                if (font || FreeSlots(rank) > 0)
+                    ranks.Add(rank);
+            }
+            return ranks;
+        }
+
+        public void ConsumeSlot(Spell spell, int rank, ClassStats classStats)
+        {
+            if (spell.IsCantrip)
+                return;
+            if (rank == SpellSlots.HighestRank(Level) && spell.Name == SpellList.Heal.Name && FreeFontSlots(classStats) > 0)
+            {
+                FontSlotsUsed++;
+                return;
+            }
+            SpellSlotsUsed[rank] = SpellSlotsUsed.GetValueOrDefault(rank) + 1;
+        }
+
+        // Pełny odpoczynek: HP, stany i sloty zaklęć
+        public void Rest()
+        {
+            Health.FullRest();
+            SpellSlotsUsed.Clear();
+            FontSlotsUsed = 0;
+        }
+
         private int Bonus(ClassStats classStats, ProficiencyStat stat)
         {
             return ProficiencyMath.Bonus(classStats.RankAt(stat, Level), Level);
@@ -132,7 +240,7 @@ namespace Tracefinder.Character
         // sprawdza czy skill w liście classstats.trainedskills lub extratrainedskills zawiera skill wskazany w metodzie i zwraca zmienną typu proficiencyrank
         public ProficiencyRank GetSkillRank(SkillName skill ,ClassStats classStats)
 		{
-			bool trained = classStats.TrainedSkills.Contains(skill) || ExtraTrainedSkills.Contains(skill);
+			bool trained = classStats.TrainedSkills.Contains(skill) || ExtraTrainedSkills.Contains(skill) || Background?.TrainedSkill == skill;
     		ProficiencyRank rank = trained ? ProficiencyRank.Trained : ProficiencyRank.Untrained;
     		ProficiencyRank increased = SkillIncreases.GetValueOrDefault(skill);
     		return increased > rank ? increased : rank;
@@ -167,7 +275,6 @@ namespace Tracefinder.Character
         {
             int proficiencyBonus = ProficiencyMath.Bonus(GetWeaponRank(weapon, classStats), Level);
             return proficiencyBonus + AbilityModifier(AttackAbility(weapon, thrown));
-
         }
 
         public int ComputeAttackBonus(CarriedWeapon weapon, ClassStats classStats, bool thrown = false)

@@ -10,26 +10,28 @@ namespace Tracefinder.Character
         General
     }
 
-    // Feat to na razie sam wpis na arkuszu, jego efekty nie są wpięte w obliczenia
+    // Efekty działają w walce i na arkuszu. Vicious Swing, Toughness, Fleet, Incredible Initiative i Battle Medicine
+    // odczytane z danych systemu PF2e dla Foundry VTT, pozostałe z pamięci modelu: NIEZWERYFIKOWANE.
     public record Feat(string Name, int Level, FeatCategory Category, string Source, string Summary);
 
-    // Nazwy i opisy z pamięci modelu: strona z featami nie dała się odczytać, więc to NIEZWERYFIKOWANE
     public static class FeatList
     {
+        public static readonly Feat ViciousSwing = new("Vicious Swing", 1, FeatCategory.Class, "Fighter", "Atak wręcz za dwie akcje z dodatkową kością obrażeń. Liczy się jak dwa ataki do MAP.");
+        public static readonly Feat ReactiveShield = new("Reactive Shield", 1, FeatCategory.Class, "Fighter", "Reakcja: podnosisz tarczę, gdy dzięki temu atak by chybił.");
+        public static readonly Feat NimbleDodge = new("Nimble Dodge", 1, FeatCategory.Class, "Rogue", "Reakcja: +2 do AC, gdy dzięki temu atak by chybił.");
+        public static readonly Feat ReachSpell = new("Reach Spell", 1, FeatCategory.Class, "Wizard", "Zaklęcia mają zasięg większy o 30 stóp.");
+        public static readonly Feat HealingHands = new("Healing Hands", 1, FeatCategory.Class, "Cleric", "Heal używa k10 zamiast k8.");
+        public static readonly Feat Toughness = new("Toughness", 1, FeatCategory.General, "General", "Dodatkowe HP równe poziomowi postaci.");
+        public static readonly Feat Fleet = new("Fleet", 1, FeatCategory.General, "General", "Szybkość większa o 5 stóp.");
+        public static readonly Feat IncredibleInitiative = new("Incredible Initiative", 1, FeatCategory.General, "General", "Premia +2 do inicjatywy.");
+        public static readonly Feat BattleMedicine = new("Battle Medicine", 1, FeatCategory.Skill, "Skill", "Raz na walkę opatrujesz się jedną akcją. Wymaga wyszkolenia w Medycynie.");
+        public static readonly Feat NaturalAmbition = new("Natural Ambition", 1, FeatCategory.Ancestry, "Human", "Dodatkowy feat klasowy.");
+        public static readonly Feat GeneralTraining = new("General Training", 1, FeatCategory.Ancestry, "Human", "Dodatkowy feat ogólny.");
+
         public static readonly IReadOnlyList<Feat> All =
         [
-            new("Double Slice", 1, FeatCategory.Class, "Fighter", "Atak dwiema broniami naraz w jednej akcji."),
-            new("Power Attack", 1, FeatCategory.Class, "Fighter", "Dwuakcyjny atak z dodatkową kością obrażeń."),
-            new("Reactive Shield", 1, FeatCategory.Class, "Fighter", "Podniesienie tarczy jako reakcja na atak."),
-            new("Nimble Dodge", 1, FeatCategory.Class, "Rogue", "Reakcja dająca premię do AC przeciw atakowi."),
-            new("Trap Finder", 1, FeatCategory.Class, "Rogue", "Premia do wykrywania i unikania pułapek."),
-            new("Toughness", 1, FeatCategory.General, "General", "Dodatkowe HP równe poziomowi postaci."),
-            new("Fleet", 1, FeatCategory.General, "General", "Szybkość większa o 5 stóp."),
-            new("Incredible Initiative", 1, FeatCategory.General, "General", "Premia +2 do inicjatywy."),
-            new("Assurance", 1, FeatCategory.Skill, "Skill", "Stały wynik testu wybranej umiejętności."),
-            new("Battle Medicine", 1, FeatCategory.Skill, "Skill", "Leczenie sojusznika jedną akcją w walce."),
-            new("Natural Ambition", 1, FeatCategory.Ancestry, "Human", "Dodatkowy feat klasowy pierwszego poziomu."),
-            new("General Training", 1, FeatCategory.Ancestry, "Human", "Dodatkowy feat ogólny pierwszego poziomu.")
+            ViciousSwing, ReactiveShield, NimbleDodge, ReachSpell, HealingHands,
+            Toughness, Fleet, IncredibleInitiative, BattleMedicine, NaturalAmbition, GeneralTraining
         ];
     }
 

@@ -55,6 +55,14 @@ namespace Tracefinder.Items
                 IsLoaded = false;
         }
 
+        // Rzucona broń trzeba dobyć ponownie, tak jak przeładowanie kosztuje to akcję
+        public void MarkThrown()
+        {
+            IsLoaded = false;
+        }
+
+        public int ActionsToReady => System.Math.Max(Template.ActionsToReload, 1);
+
         public void Reload()
         {
             IsLoaded = true;

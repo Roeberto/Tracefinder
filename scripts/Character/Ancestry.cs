@@ -42,4 +42,21 @@ namespace Tracefinder.Character
             Dwarf, Elf, Gnome, Goblin, Halfling, Human, Leshy, Orc
         ];
     }
+
+    // Odczytane z danych systemu PF2e dla Foundry VTT. Uproszczenia: bez Lore i darmowego feata, Scholar zawsze w Arcana,
+    // a przyrosty cech z tła mieszczą się w limicie sumy modyfikatorów w kreatorze.
+    public record Background(string Name, SkillName TrainedSkill);
+
+    public static class BackgroundList
+    {
+        public static readonly IReadOnlyList<Background> All =
+        [
+            new("Acolyte", SkillName.Religion),
+            new("Criminal", SkillName.Stealth),
+            new("Farmhand", SkillName.Athletics),
+            new("Field Medic", SkillName.Medicine),
+            new("Scholar", SkillName.Arcana),
+            new("Warrior", SkillName.Intimidation)
+        ];
+    }
 }

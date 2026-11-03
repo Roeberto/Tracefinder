@@ -15,7 +15,12 @@ namespace Tracefinder.Character
         public static int AvailableFeatSlots(CharacterCore core, ClassStats classStats, FeatCategory category)
         {
             int taken = core.Feats.Count(f => f.Category == category);
-            return Math.Max(Progression.FeatSlots(category, core.Level, classStats) - taken, 0);
+            int bonus = 0;
+            if (category == FeatCategory.Class && core.HasFeat(FeatList.NaturalAmbition))
+                bonus = 1;
+            if (category == FeatCategory.General && core.HasFeat(FeatList.GeneralTraining))
+                bonus = 1;
+            return Math.Max(Progression.FeatSlots(category, core.Level, classStats) + bonus - taken, 0);
         }
 
         public static List<Feat> AvailableFeats(CharacterCore core, ClassStats classStats, FeatCategory category)

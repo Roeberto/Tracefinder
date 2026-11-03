@@ -88,7 +88,7 @@ selection_enabled = true
 
 [node name="ActionPanel" type="PanelContainer" parent="Margin/Root"]
 layout_mode = 2
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(330, 0)
 
 [node name="Box" type="VBoxContainer" parent="Margin/Root/ActionPanel"]
 layout_mode = 2
@@ -150,6 +150,18 @@ theme_override_font_sizes/font_size = 14
 text = ""
 autowrap_mode = 2
 
+[node name="ViciousSwingCheck" type="CheckBox" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Vicious Swing (2 akcje)"
+visible = false
+
+[node name="HeroPointCheck" type="CheckBox" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Hero Point: przerzuć pudło"
+visible = false
+
 [node name="Sep2" type="HSeparator" parent="Margin/Root/ActionPanel/Box"]
 layout_mode = 2
 
@@ -157,25 +169,110 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Stride (ruch)"
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 36)
 
 [node name="StepButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Step (krok)"
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 36)
 
 [node name="StrikeButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Strike (atak)"
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 36)
 
 [node name="InteractButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Przeładuj"
-custom_minimum_size = Vector2(0, 40)
+text = "Przygotuj broń"
+custom_minimum_size = Vector2(0, 36)
+
+[node name="ShieldButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Raise a Shield"
+custom_minimum_size = Vector2(0, 36)
+
+[node name="MedicineButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Battle Medicine"
+custom_minimum_size = Vector2(0, 36)
+
+[node name="SwapRow" type="HBoxContainer" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SwapOption" type="OptionButton" parent="Margin/Root/ActionPanel/Box/SwapRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+
+[node name="SwapButton" type="Button" parent="Margin/Root/ActionPanel/Box/SwapRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Dobądź"
+custom_minimum_size = Vector2(86, 0)
+
+[node name="PotionRow" type="HBoxContainer" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PotionOption" type="OptionButton" parent="Margin/Root/ActionPanel/Box/PotionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+
+[node name="PotionButton" type="Button" parent="Margin/Root/ActionPanel/Box/PotionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Wypij"
+custom_minimum_size = Vector2(86, 0)
+
+[node name="SpellBox" type="VBoxContainer" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SpellTitle" type="Label" parent="Margin/Root/ActionPanel/Box/SpellBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.64, 0.66, 1)
+theme_override_font_sizes/font_size = 12
+text = "ZAKLĘCIA"
+
+[node name="SpellOption" type="OptionButton" parent="Margin/Root/ActionPanel/Box/SpellBox"]
+unique_name_in_owner = true
+layout_mode = 2
+clip_text = true
+
+[node name="SpellRow" type="HBoxContainer" parent="Margin/Root/ActionPanel/Box/SpellBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="RankOption" type="OptionButton" parent="Margin/Root/ActionPanel/Box/SpellBox/SpellRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpellButton" type="Button" parent="Margin/Root/ActionPanel/Box/SpellBox/SpellRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Rzuć"
+custom_minimum_size = Vector2(86, 0)
+
+[node name="SpellInfo" type="Label" parent="Margin/Root/ActionPanel/Box/SpellBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.64, 0.66, 1)
+theme_override_font_sizes/font_size = 13
+text = ""
+autowrap_mode = 2
 
 [node name="EndTurnButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
 unique_name_in_owner = true
@@ -195,6 +292,13 @@ autowrap_mode = 2
 [node name="Spacer" type="Control" parent="Margin/Root/ActionPanel/Box"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="ContinueButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Dalej"
+custom_minimum_size = Vector2(0, 44)
+visible = false
 
 [node name="LevelUpButton" type="Button" parent="Margin/Root/ActionPanel/Box"]
 unique_name_in_owner = true

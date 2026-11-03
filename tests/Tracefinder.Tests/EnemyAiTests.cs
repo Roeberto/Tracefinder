@@ -31,11 +31,21 @@ namespace Tracefinder.Tests
             return e;
         }
 
+        // Kobold bez procy, żeby sprawdzić samą walkę wręcz i bronią rzucaną
+        private static readonly Statblock Spearman = new()
+        {
+            Name = "Kobold Warrior",
+            Level = -1,
+            MaxHp = 7,
+            ArmorClass = 16,
+            Strikes = [StatblockList.KoboldWarrior.Strikes[0]]
+        };
+
         [Fact]
         public void MeleeMonsterWalksUpAndAttacks()
         {
             Dice.SetSeed(1);
-            MonsterCombatant kobold = new(StatblockList.KoboldWarrior, new GridPos(0, 0));
+            MonsterCombatant kobold = new(Spearman, new GridPos(0, 0));
             PlayerCombatant hero = Hero(new GridPos(7, 0));
             Encounter e = StartedOn(new BattleGrid(9, 3), kobold, hero);
 
@@ -50,7 +60,7 @@ namespace Tracefinder.Tests
         public void MonsterDoesNotThrowItsOnlyMeleeWeaponFromAfar()
         {
             Dice.SetSeed(2);
-            MonsterCombatant kobold = new(StatblockList.KoboldWarrior, new GridPos(0, 0));
+            MonsterCombatant kobold = new(Spearman, new GridPos(0, 0));
             PlayerCombatant hero = Hero(new GridPos(20, 0));
             Encounter e = StartedOn(new BattleGrid(21, 1), kobold, hero);
 

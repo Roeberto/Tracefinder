@@ -17,10 +17,12 @@ namespace Tracefinder.Character
         public int Reflex { get; init; }
         public int Will { get; init; }
         public int SpeedFeet { get; init; } = 25;
+        public bool IsUndead { get; init; }
+        public bool HasReactiveStrike { get; init; }
         public IReadOnlyList<MonsterStrike> Strikes { get; init; } = [];
     }
 
-    // Wartości z pamięci modelu: strony Monster Core nie dały się odczytać, więc to NIEZWERYFIKOWANE
+    // Monster Core, odczytane z danych systemu PF2e dla Foundry VTT
     public static class StatblockList
     {
         private static readonly Equipment.Weapon Dogslicer = new()
@@ -63,6 +65,32 @@ namespace Tracefinder.Character
             TraitList = [Trait.Forceful, Trait.Sweep]
         };
 
+        private static readonly Equipment.Weapon Sling = new()
+        {
+            Name = "Sling",
+            Category = WeaponCategory.Simple,
+            DamageDice = Dice.DiceSize.D4,
+            DamageType = WeaponDamageType.Bludgeoning,
+            DiceNumber = 1,
+            Group = WeaponGroup.Sling,
+            Kind = WeaponKind.Ranged,
+            Handedness = WeaponHandedness.OneHanded,
+            RangeIncrement = 50
+        };
+
+        private static readonly Equipment.Weapon Claw = new()
+        {
+            Name = "Claw",
+            Category = WeaponCategory.Unarmed,
+            DamageDice = Dice.DiceSize.D4,
+            DamageType = WeaponDamageType.Slashing,
+            DiceNumber = 1,
+            Group = WeaponGroup.Brawling,
+            Kind = WeaponKind.Melee,
+            Handedness = WeaponHandedness.OneHanded,
+            TraitList = [Trait.Agile]
+        };
+
         public static readonly Statblock GoblinWarrior = new()
         {
             Name = "Goblin Warrior",
@@ -75,8 +103,8 @@ namespace Tracefinder.Character
             Will = 3,
             Strikes =
             [
-                new("Dogslicer", 8, Dogslicer, 0),
-                new("Shortbow", 6, WeaponList.Shortbow, 0)
+                new("Dogslicer", 7, Dogslicer, 0),
+                new("Shortbow", 7, WeaponList.Shortbow, 0)
             ]
         };
 
@@ -84,21 +112,23 @@ namespace Tracefinder.Character
         {
             Name = "Kobold Warrior",
             Level = -1,
-            MaxHp = 8,
+            MaxHp = 7,
             ArmorClass = 16,
             Perception = 3,
-            Fortitude = 4,
+            Fortitude = 3,
             Reflex = 7,
-            Will = 5,
+            Will = 3,
             Strikes =
             [
-                new("Spear", 8, Spear, 0)
+                new("Spear", 3, Spear, 1),
+                new("Sling", 5, Sling, 0)
             ]
         };
 
         public static readonly Statblock SkeletonGuard = new()
         {
             Name = "Skeleton Guard",
+            IsUndead = true,
             Level = -1,
             MaxHp = 4,
             ArmorClass = 16,
@@ -109,6 +139,7 @@ namespace Tracefinder.Character
             Strikes =
             [
                 new("Scimitar", 6, Scimitar, 2),
+                new("Claw", 6, Claw, 2),
                 new("Shortbow", 6, WeaponList.Shortbow, 0)
             ]
         };

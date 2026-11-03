@@ -15,7 +15,8 @@ namespace Tracefinder.UI
             None,
             Stride,
             Step,
-            Strike
+            Strike,
+            Spell
         }
 
         private Encounter _encounter;
@@ -58,6 +59,12 @@ namespace Tracefinder.UI
             GetNode<Button>("%StepButton").Pressed += () => SetMode(Mode.Step);
             GetNode<Button>("%StrikeButton").Pressed += () => SetMode(Mode.Strike);
             GetNode<Button>("%InteractButton").Pressed += OnInteract;
+            GetNode<Button>("%ShieldButton").Pressed += () => Act(() => _encounter.RaiseShield());
+            GetNode<Button>("%MedicineButton").Pressed += () => Act(() => _encounter.UseBattleMedicine());
+            GetNode<Button>("%SpellButton").Pressed += () => SetMode(Mode.Spell);
+            GetNode<Button>("%PotionButton").Pressed += OnDrink;
+            GetNode<Button>("%SwapButton").Pressed += OnSwap;
+            GetNode<OptionButton>("%SpellOption").ItemSelected += _ => { RebuildRanks(); Refresh(); };
             GetNode<Button>("%EndTurnButton").Pressed += OnEndTurn;
             GetNode<Button>("%BackButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/MainMenu.tscn");
             GetNode<Button>("%LevelUpButton").Pressed += () => GetTree().ChangeSceneToFile("res://scenes/LevelUp.tscn");
@@ -140,6 +147,94 @@ namespace Tracefinder.UI
             Refresh();
         }
 
+        private void Act(System.Func<ActionResult> action)
+        {
+            Report(action());
+            RebuildActionLists();
+            Refresh();
+        }
+
+        private void OnDrink()
+        {
+            OptionButton option = GetNode<OptionButton>("%PotionOption");
+            if (option.Selected >= 0)
+                Act(() => _encounter.DrinkPotion(ShopCatalog.Potions[option.GetItemId(option.Selected)]));
+        }
+
+        private void OnSwap()
+        {
+            OptionButton option = GetNode<OptionButton>("%SwapOption");
+            if (option.Selected < 0 || _encounter.Current is not PlayerCombatant player)
+                return;
+            Act(() => _encounter.EquipWeapon(player.Core.Inventory[option.GetItemId(option.Selected)]));
+            RebuildStrikeOptions();
+            Refresh();
+        }
+
+        private Spell SelectedSpell()
+        {
+            OptionButton option = GetNode<OptionButton>("%SpellOption");
+            if (_encounter.Current is not PlayerCombatant player || option.Selected < 0)
+                return null;
+            return SpellList.For(player.ClassStats)[option.Selected];
+        }
+
+        private void RebuildRanks()
+        {
+            OptionButton ranks = GetNode<OptionButton>("%RankOption");
+            ranks.Clear();
+            Spell spell = SelectedSpell();
+            if (spell == null || _encounter.Current is not PlayerCombatant player)
+                return;
+            foreach (int rank in player.Core.CastingRanks(spell, player.ClassStats))
+                ranks.AddItem(RankText(player, spell, rank), rank);
+        }
+
+        private static string RankText(PlayerCombatant player, Spell spell, int rank)
+        {
+            if (spell.IsCantrip)
+                return "Sztuczka";
+            bool font = spell.Name == SpellList.Heal.Name && rank == SpellSlots.HighestRank(player.Level) && player.Core.FreeFontSlots(player.ClassStats) > 0;
+            int free = font ? player.Core.FreeFontSlots(player.ClassStats) : player.Core.FreeSlots(rank);
+            return $"Ranga {rank} ({free})";
+        }
+
+        // Listy mikstur, broni i zaklęć zależą od postaci w turze i zmieniają się po ich użyciu
+        private void RebuildActionLists()
+        {
+            OptionButton potions = GetNode<OptionButton>("%PotionOption");
+            OptionButton swap = GetNode<OptionButton>("%SwapOption");
+            OptionButton spells = GetNode<OptionButton>("%SpellOption");
+            int chosenPotion = potions.Selected;
+            int chosenSpell = spells.Selected;
+            potions.Clear();
+            swap.Clear();
+            spells.Clear();
+
+            if (_encounter.Current is PlayerCombatant player)
+            {
+                for (int i = 0; i < ShopCatalog.Potions.Count; i++)
+                {
+                    int count = player.Core.Potions.GetValueOrDefault(ShopCatalog.Potions[i].Name);
+                    if (count > 0)
+                        potions.AddItem($"{ShopCatalog.Potions[i].Name} x{count}", i);
+                }
+                for (int i = 0; i < player.Core.Inventory.Count; i++)
+                {
+                    if (player.Core.Inventory[i] != player.Core.EquippedWeapon)
+                        swap.AddItem(player.Core.Inventory[i].Name, i);
+                }
+                foreach (Spell spell in SpellList.For(player.ClassStats))
+                    spells.AddItem(spell.Name);
+            }
+
+            if (chosenPotion >= 0 && chosenPotion < potions.ItemCount)
+                potions.Select(chosenPotion);
+            if (chosenSpell >= 0 && chosenSpell < spells.ItemCount)
+                spells.Select(chosenSpell);
+            RebuildRanks();
+        }
+
         private void OnStrikeChanged()
         {
             RebuildDamageOptions();
@@ -167,7 +262,25 @@ namespace Tracefinder.UI
                     if (target == null)
                         _message.Text = "Na tym polu nie ma celu.";
                     else if (strike != null)
-                        Report(_encounter.Strike(target, strike, SelectedDamageType()));
+                        Report(_encounter.Strike(
+                            target,
+                            strike,
+                            SelectedDamageType(),
+                            GetNode<CheckBox>("%ViciousSwingCheck").ButtonPressed,
+                            GetNode<CheckBox>("%HeroPointCheck").ButtonPressed));
+                    break;
+                case Mode.Spell:
+                    Combatant spellTarget = _encounter.UnitAt(pos);
+                    OptionButton ranks = GetNode<OptionButton>("%RankOption");
+                    if (spellTarget == null)
+                    {
+                        _message.Text = "Na tym polu nie ma celu.";
+                    }
+                    else if (SelectedSpell() != null && ranks.Selected >= 0 && Report(_encounter.CastSpell(SelectedSpell(), spellTarget, ranks.GetItemId(ranks.Selected))))
+                    {
+                        _mode = Mode.None;
+                        RebuildRanks();
+                    }
                     break;
                 default:
                     _message.Text = "Najpierw wybierz akcję.";
@@ -215,6 +328,7 @@ namespace Tracefinder.UI
             {
                 _shownUnit = unit;
                 RebuildStrikeOptions();
+                RebuildActionLists();
             }
 
             GetNode<Label>("%RoundLabel").Text = $"Runda {_encounter.Round}";
@@ -240,14 +354,57 @@ namespace Tracefinder.UI
             GetNode<Button>("%EndTurnButton").Disabled = !playerTurn;
 
             Button interact = GetNode<Button>("%InteractButton");
-            interact.Visible = strike?.Carried != null && strike.Carried.Template.ActionsToReload > 0 && !strike.Carried.IsLoaded;
-            interact.Disabled = !playerTurn || (strike?.Carried != null && !unit.Actions.CanUseMainAction(strike.Carried.Template.ActionsToReload));
+            interact.Visible = strike?.Carried != null && !strike.Carried.IsLoaded;
+            interact.Disabled = !playerTurn || (strike?.Carried != null && !unit.Actions.CanUseMainAction(strike.Carried.ActionsToReady));
+
+            RefreshClassActions(unit, playerTurn, canAct);
 
             _strikeOption.Disabled = !playerTurn;
             _damageOption.Disabled = !playerTurn;
 
             UpdateHighlights(unit, strike);
             _grid.QueueRedraw();
+        }
+
+        private void RefreshClassActions(Combatant unit, bool playerTurn, bool canAct)
+        {
+            PlayerCombatant player = playerTurn ? unit as PlayerCombatant : null;
+
+            CheckBox swing = GetNode<CheckBox>("%ViciousSwingCheck");
+            swing.Visible = player?.HasViciousSwing ?? false;
+            swing.Disabled = player == null || !player.Actions.CanUseMainAction(2);
+            if (swing.Disabled)
+                swing.SetPressedNoSignal(false);
+
+            CheckBox hero = GetNode<CheckBox>("%HeroPointCheck");
+            hero.Visible = player != null && player.Health.HeroPoints > 0;
+            if (!hero.Visible)
+                hero.SetPressedNoSignal(false);
+
+            Button shield = GetNode<Button>("%ShieldButton");
+            shield.Visible = player?.HasShield ?? false;
+            SetButton("%ShieldButton", canAct && player != null && !player.ShieldRaised, false);
+
+            Button medicine = GetNode<Button>("%MedicineButton");
+            medicine.Visible = player != null && player.Core.HasFeat(FeatList.BattleMedicine);
+            medicine.Disabled = !canAct || (player?.UsedBattleMedicine ?? true);
+
+            OptionButton swap = GetNode<OptionButton>("%SwapOption");
+            GetNode<HBoxContainer>("%SwapRow").Visible = player != null && swap.ItemCount > 0;
+            GetNode<Button>("%SwapButton").Disabled = !canAct;
+
+            OptionButton potions = GetNode<OptionButton>("%PotionOption");
+            GetNode<HBoxContainer>("%PotionRow").Visible = player != null && potions.ItemCount > 0;
+            GetNode<Button>("%PotionButton").Disabled = !canAct;
+
+            OptionButton spells = GetNode<OptionButton>("%SpellOption");
+            GetNode<VBoxContainer>("%SpellBox").Visible = player != null && spells.ItemCount > 0;
+            Spell spell = SelectedSpell();
+            OptionButton ranks = GetNode<OptionButton>("%RankOption");
+            GetNode<Label>("%SpellInfo").Text = spell == null || player == null
+                ? ""
+                : $"{spell.Actions} akcje, {_encounter.SpellRange(spell)} stóp, DC {player.Core.ComputeSpellDc(player.ClassStats)}, atak {UiText.Signed(player.Core.ComputeSpellAttack(player.ClassStats))}. {spell.Summary}";
+            SetButton("%SpellButton", spell != null && playerTurn && unit.Actions.CanUseMainAction(spell.Actions) && ranks.ItemCount > 0, _mode == Mode.Spell);
         }
 
         private void SetButton(string path, bool enabled, bool pressedLook)
@@ -267,6 +424,8 @@ namespace Tracefinder.UI
             int map = AttackRules.MultipleAttackPenalty(unit.Actions.AttacksThisTurn, strike.Weapon);
             int attack = unit.AttackBonus(strike, false);
             string damage = UiText.DamageText(strike.Weapon, unit.DamageBonus(strike, false), strike.Carried?.StrikingRune ?? 0);
+            if (strike.Carried != null && !strike.Carried.IsLoaded)
+                return "Broń trzeba przygotować.";
             string traits = UiText.TraitList(strike.Weapon);
             string text = $"Atak {UiText.Signed(attack + map)} (MAP {map}), obrażenia {damage}";
             return traits.Length > 0 ? $"{text}\n{traits}" : text;
@@ -295,6 +454,16 @@ namespace Tracefinder.UI
                     foreach (Combatant other in _encounter.Combatants)
                     {
                         if (other.Side != unit.Side && !other.IsOut && _encounter.StrikeReach(unit, other, strike).Refusal == null)
+                            cells.Add(other.Position);
+                    }
+                    break;
+                case Mode.Spell:
+                    Spell spell = SelectedSpell();
+                    if (spell == null)
+                        break;
+                    foreach (Combatant other in _encounter.Combatants)
+                    {
+                        if (_encounter.SpellTargetRefusal(spell, other) == null)
                             cells.Add(other.Position);
                     }
                     break;

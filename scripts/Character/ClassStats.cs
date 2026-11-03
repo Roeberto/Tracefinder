@@ -15,7 +15,11 @@ namespace Tracefinder.Character
         SimpleWeapons,
         MartialWeapons,
         AdvancedWeapons,
-        UnarmedAttacks
+        UnarmedAttacks,
+        LightArmor,
+        MediumArmor,
+        HeavyArmor,
+        Spellcasting
     }
 
     // Od tego poziomu dana statystyka ma podaną rangę
@@ -34,6 +38,10 @@ namespace Tracefinder.Character
         public ProficiencyRank WillProficiency { get; set; }
         public ProficiencyRank ClassDcProficiency { get; set; }
         public ProficiencyRank UnarmoredProficiency { get; set; }
+        public ProficiencyRank LightArmorProficiency { get; set; }
+        public ProficiencyRank MediumArmorProficiency { get; set; }
+        public ProficiencyRank HeavyArmorProficiency { get; set; }
+        public ProficiencyRank SpellcastingProficiency { get; set; }
         public List<string> Level1Features { get; set; } = new();
         public Dictionary<WeaponCategory, ProficiencyRank> WeaponProficiencies { get; set; } = new();
         public List<RankUp> RankUps { get; set; } = new();
@@ -50,6 +58,21 @@ namespace Tracefinder.Character
                     rank = up.Rank;
             }
             return rank;
+        }
+
+        public ProficiencyRank ArmorRankAt(ArmorCategory category, int level)
+        {
+            switch (category)
+            {
+                case ArmorCategory.Light:
+                    return RankAt(ProficiencyStat.LightArmor, level);
+                case ArmorCategory.Medium:
+                    return RankAt(ProficiencyStat.MediumArmor, level);
+                case ArmorCategory.Heavy:
+                    return RankAt(ProficiencyStat.HeavyArmor, level);
+                default:
+                    return RankAt(ProficiencyStat.Unarmored, level);
+            }
         }
 
         public ProficiencyRank WeaponRankAt(WeaponCategory category, int level)
@@ -73,6 +96,14 @@ namespace Tracefinder.Character
                     return ClassDcProficiency;
                 case ProficiencyStat.Unarmored:
                     return UnarmoredProficiency;
+                case ProficiencyStat.LightArmor:
+                    return LightArmorProficiency;
+                case ProficiencyStat.MediumArmor:
+                    return MediumArmorProficiency;
+                case ProficiencyStat.HeavyArmor:
+                    return HeavyArmorProficiency;
+                case ProficiencyStat.Spellcasting:
+                    return SpellcastingProficiency;
                 case ProficiencyStat.SimpleWeapons:
                     return WeaponProficiencies.GetValueOrDefault(WeaponCategory.Simple);
                 case ProficiencyStat.MartialWeapons:

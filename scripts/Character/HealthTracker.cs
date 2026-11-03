@@ -133,6 +133,31 @@ public class HealthTracker
         Wounded = Math.Max(Wounded - 1, 0);
     }
 
+    public void ClearWounded()
+    {
+        Wounded = 0;
+    }
+
+    // Odtworzenie stanu z zapisu gry
+    public void Restore(int currentHp, int dying, int wounded, int heroPoints)
+    {
+        CurrentHp = Math.Clamp(currentHp, 0, MaxHp);
+        Dying = Math.Clamp(dying, 0, MaxDying);
+        Wounded = Math.Max(wounded, 0);
+        HeroPoints = Math.Clamp(heroPoints, 0, MaxHeroPoints);
+    }
+
+    // Heroiczne ocalenie: wszystkie Hero Pointy za uniknięcie śmierci
+    public bool SpendAllHeroPointsToSurvive()
+    {
+        if (HeroPoints <= 0)
+            return false;
+        HeroPoints = 0;
+        Dying = 0;
+        CurrentHp = Math.Max(CurrentHp, 1);
+        return true;
+    }
+
     public bool IsUnconscious => CurrentHp <= 0;
 
     public bool IsDead => DiesAtZeroHp ? CurrentHp <= 0 : Dying >= MaxDying;
