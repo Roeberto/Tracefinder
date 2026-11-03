@@ -1,5 +1,8 @@
 using Godot;
 
+namespace Tracefinder
+{
+
 public partial class PlayerControl : CharacterBody2D
 {
 	[Export] public float Speed = 200f;
@@ -49,4 +52,6 @@ public partial class PlayerControl : CharacterBody2D
 				_sprite.Play("walk_up");
 		}
 	}
+}
+
 }
