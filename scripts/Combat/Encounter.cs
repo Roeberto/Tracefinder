@@ -26,6 +26,7 @@ namespace Tracefinder.Combat
         public EncounterState State { get; private set; } = EncounterState.NotStarted;
         public int Round { get; private set; }
         public Side? Winner { get; private set; }
+        public int ExperienceAwarded { get; private set; }
         public List<string> Log { get; } = new();
         public event Action<string> LogAdded;
 
@@ -110,6 +111,9 @@ namespace Tracefinder.Combat
 
         private bool CheckVictory()
         {
+            if (State == EncounterState.Finished)
+                return true;
+
             bool partyStanding = _order.Any(c => c.Side == Side.Party && !c.IsOut);
             bool enemiesStanding = _order.Any(c => c.Side == Side.Enemies && !c.IsOut);
             if (partyStanding && enemiesStanding)
@@ -118,7 +122,22 @@ namespace Tracefinder.Combat
             State = EncounterState.Finished;
             Winner = partyStanding ? Side.Party : Side.Enemies;
             Write(Winner == Side.Party ? "Drużyna wygrywa starcie." : "Drużyna przegrywa starcie.");
+            if (Winner == Side.Party)
+                AwardExperience();
             return true;
+        }
+
+        private void AwardExperience()
+        {
+            int partyLevel = _order.Where(c => c.Side == Side.Party).Max(c => c.Level);
+            ExperienceAwarded = _order.Where(c => c.Side == Side.Enemies).Sum(c => Rewards.ExperienceFor(partyLevel, c.Level));
+            Write($"Zdobyte doświadczenie: {ExperienceAwarded} XP.");
+
+            foreach (PlayerCombatant player in _order.OfType<PlayerCombatant>())
+            {
+                if (player.AwardExperience(ExperienceAwarded) > 0)
+                    Write($"{player.Name} awansuje na poziom {player.Level}.");
+            }
         }
 
         public Combatant UnitAt(GridPos pos)

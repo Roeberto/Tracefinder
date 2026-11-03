@@ -26,6 +26,9 @@ namespace Tracefinder.UI
         private Label _message;
         private Mode _mode;
         private Combatant _shownUnit;
+        private bool _enemyTurnRunning;
+
+        private const double EnemyActionDelaySeconds = 0.45;
 
         public override void _Ready()
         {
@@ -61,6 +64,32 @@ namespace Tracefinder.UI
             _damageOption.ItemSelected += _ => Refresh();
 
             Refresh();
+            RunEnemyTurns();
+        }
+
+        private bool IsPlayerTurn => _encounter.Current?.Side == Tracefinder.Combat.Side.Party;
+
+        // Przeciwnicy działają sami, po jednej akcji, żeby gracz widział co się dzieje
+        private async void RunEnemyTurns()
+        {
+            if (_enemyTurnRunning)
+                return;
+            _enemyTurnRunning = true;
+
+            while (_encounter.Current?.Side == Tracefinder.Combat.Side.Enemies)
+            {
+                await ToSignal(GetTree().CreateTimer(EnemyActionDelaySeconds), SceneTreeTimer.SignalName.Timeout);
+                if (!IsInstanceValid(this) || !IsInsideTree())
+                    return;
+
+                Combatant unit = _encounter.Current;
+                if (unit != null && !EnemyAi.TakeAction(_encounter) && _encounter.Current == unit)
+                    _encounter.EndTurn();
+                Refresh();
+            }
+
+            _enemyTurnRunning = false;
+            Refresh();
         }
 
         private StrikeOption SelectedStrike()
@@ -85,10 +114,13 @@ namespace Tracefinder.UI
 
         private void OnEndTurn()
         {
+            if (!IsPlayerTurn)
+                return;
             _encounter.EndTurn();
             _mode = Mode.None;
             _message.Text = "";
             Refresh();
+            RunEnemyTurns();
         }
 
         private void OnInteract()
@@ -107,7 +139,7 @@ namespace Tracefinder.UI
 
         private void OnCellClicked(GridPos pos)
         {
-            if (_encounter.State != EncounterState.InProgress)
+            if (!IsPlayerTurn)
                 return;
 
             switch (_mode)
@@ -183,24 +215,27 @@ namespace Tracefinder.UI
             GetNode<Label>("%ActiveName").Text = active ? unit.Name : FinishedText();
             GetNode<Label>("%ActiveStats").Text = active
                 ? $"HP {unit.Health.CurrentHp}/{unit.Health.MaxHp}, AC {unit.ArmorClass}, szybkość {unit.SpeedFeet} stóp"
-                : "";
+                : _encounter.ExperienceAwarded > 0 ? $"Zdobyte doświadczenie: {_encounter.ExperienceAwarded} XP" : "";
             GetNode<Label>("%ActionsLabel").Text = active ? UiText.Pips(unit.Actions.MainActions, ActionTracker.MaxMainAction) : "";
 
             StrikeOption strike = SelectedStrike();
             GetNode<Label>("%StrikeInfo").Text = strike == null ? "" : StrikeInfo(unit, strike);
 
-            bool canAct = active && unit.Actions.CanUseMainAction(1);
+            bool playerTurn = IsPlayerTurn;
+            bool canAct = playerTurn && unit.Actions.CanUseMainAction(1);
+            if (!playerTurn)
+                _mode = Mode.None;
             SetButton("%StrideButton", canAct, _mode == Mode.Stride);
             SetButton("%StepButton", canAct, _mode == Mode.Step);
             SetButton("%StrikeButton", canAct && strike != null, _mode == Mode.Strike);
-            GetNode<Button>("%EndTurnButton").Disabled = !active;
+            GetNode<Button>("%EndTurnButton").Disabled = !playerTurn;
 
             Button interact = GetNode<Button>("%InteractButton");
             interact.Visible = strike?.Carried != null && strike.Carried.Template.ActionsToReload > 0 && !strike.Carried.IsLoaded;
-            interact.Disabled = !active || (strike?.Carried != null && !unit.Actions.CanUseMainAction(strike.Carried.Template.ActionsToReload));
+            interact.Disabled = !playerTurn || (strike?.Carried != null && !unit.Actions.CanUseMainAction(strike.Carried.Template.ActionsToReload));
 
-            _strikeOption.Disabled = !active;
-            _damageOption.Disabled = !active;
+            _strikeOption.Disabled = !playerTurn;
+            _damageOption.Disabled = !playerTurn;
 
             UpdateHighlights(unit, strike);
             _grid.QueueRedraw();

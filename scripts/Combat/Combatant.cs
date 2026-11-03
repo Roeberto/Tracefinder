@@ -24,6 +24,7 @@ namespace Tracefinder.Combat
         public ActionTracker Actions { get; } = new();
 
         public abstract HealthTracker Health { get; }
+        public abstract int Level { get; }
         public abstract int SpeedFeet { get; }
         public abstract int ArmorClass { get; }
         public abstract int Perception { get; }
@@ -51,9 +52,16 @@ namespace Tracefinder.Combat
         }
 
         public override HealthTracker Health => _core.Health;
+        public override int Level => _core.Level;
         public override int SpeedFeet => _core.SpeedFeet;
         public override int ArmorClass => _core.ComputeMaxAc(_classStats);
         public override int Perception => _core.ComputePerception(_classStats);
+
+        // Zwraca liczbę zdobytych poziomów
+        public int AwardExperience(int amount)
+        {
+            return _core.AddExperience(amount, _classStats);
+        }
 
         public override IReadOnlyList<StrikeOption> Strikes
         {
@@ -96,6 +104,7 @@ namespace Tracefinder.Combat
         }
 
         public override HealthTracker Health => _health;
+        public override int Level => _statblock.Level;
         public override int SpeedFeet => _statblock.SpeedFeet;
         public override int ArmorClass => _statblock.ArmorClass;
         public override int Perception => _statblock.Perception;

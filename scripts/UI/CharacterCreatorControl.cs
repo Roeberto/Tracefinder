@@ -21,6 +21,10 @@ namespace Tracefinder.UI
         private OptionButton _keyAbility;
         private OptionButton _ancestry;
         private OptionButton _weapon;
+        private OptionButton _ancestryFeat;
+        private OptionButton _classFeat;
+        private readonly List<Feat> _ancestryFeats = new();
+        private readonly List<Feat> _classFeats = new();
         private Label _message;
 
         public override void _Ready()
@@ -31,6 +35,8 @@ namespace Tracefinder.UI
             _keyAbility = GetNode<OptionButton>("%KeyAbilityOption");
             _ancestry = GetNode<OptionButton>("%AncestryOption");
             _weapon = GetNode<OptionButton>("%WeaponOption");
+            _ancestryFeat = GetNode<OptionButton>("%AncestryFeatOption");
+            _classFeat = GetNode<OptionButton>("%ClassFeatOption");
             _message = GetNode<Label>("%ErrorLabel");
 
             foreach (AbilityScore ability in System.Enum.GetValues<AbilityScore>())
@@ -59,7 +65,11 @@ namespace Tracefinder.UI
 
             _classOption.ItemSelected += _ => OnClassChanged();
             _keyAbility.ItemSelected += _ => Recalculate();
-            _ancestry.ItemSelected += _ => Recalculate();
+            _ancestry.ItemSelected += _ =>
+            {
+                RebuildFeats(FeatCategory.Ancestry, _ancestryFeat, _ancestryFeats, AncestryList.All[_ancestry.Selected].Name, null);
+                Recalculate();
+            };
             _name.TextChanged += _ => ShowMessage("");
             GetNode<Button>("%SaveButton").Pressed += Save;
             GetNode<Button>("%SheetButton").Pressed += OpenSheet;
@@ -80,6 +90,7 @@ namespace Tracefinder.UI
         {
             RebuildKeyAbilities(null);
             ResetSkillBoxes(new List<SkillName>());
+            RebuildClassFeats(null);
             Recalculate();
         }
 
@@ -91,6 +102,33 @@ namespace Tracefinder.UI
                 _keyAbility.AddItem(UiText.AbilityName(ability));
             int index = preferred.HasValue ? options.IndexOf(preferred.Value) : 0;
             _keyAbility.Select(index >= 0 ? index : 0);
+        }
+
+        private void RebuildClassFeats(List<Feat> preferred)
+        {
+            RebuildFeats(FeatCategory.Class, _classFeat, _classFeats, SelectedClass.Name, preferred);
+            // Czarodziej i Kapłan dostają pierwszy feat klasowy dopiero na poziomie 2
+            _classFeat.Disabled = !Progression.GrantsClassFeat(1, SelectedClass) || _classFeats.Count == 0;
+        }
+
+        private static void RebuildFeats(FeatCategory category, OptionButton option, List<Feat> feats, string source, List<Feat> preferred)
+        {
+            feats.Clear();
+            option.Clear();
+            option.AddItem("nie wybrano");
+            foreach (Feat feat in FeatList.All)
+            {
+                if (feat.Category == category && feat.Source == source && feat.Level <= 1)
+                {
+                    feats.Add(feat);
+                    option.AddItem(feat.Name);
+                    option.SetItemTooltip(option.ItemCount - 1, feat.Summary);
+                }
+            }
+
+            int chosen = preferred == null ? -1 : feats.FindIndex(f => preferred.Any(p => p.Name == f.Name));
+            option.Select(chosen + 1);
+            option.Disabled = feats.Count == 0;
         }
 
         private void ResetSkillBoxes(List<SkillName> extra)
@@ -119,6 +157,8 @@ namespace Tracefinder.UI
             _weapon.Select(weaponIndex >= 0 ? weaponIndex : 0);
 
             ResetSkillBoxes(source.ExtraTrainedSkills);
+            RebuildFeats(FeatCategory.Ancestry, _ancestryFeat, _ancestryFeats, AncestryList.All[_ancestry.Selected].Name, source.Feats);
+            RebuildClassFeats(source.Feats);
             Recalculate();
         }
 
@@ -164,10 +204,19 @@ namespace Tracefinder.UI
                 return null;
             }
 
+            AddSelectedFeat(core, _ancestryFeat, _ancestryFeats);
+            AddSelectedFeat(core, _classFeat, _classFeats);
+
             core.EquippedWeapon = new CarriedWeapon(WeaponList.All[_weapon.Selected]);
             core.Inventory.Add(core.EquippedWeapon);
             core.InitializeHealth(SelectedClass);
             return core;
+        }
+
+        private static void AddSelectedFeat(CharacterCore core, OptionButton option, List<Feat> feats)
+        {
+            if (option.Selected > 0)
+                core.Feats.Add(feats[option.Selected - 1]);
         }
 
         private void Recalculate()

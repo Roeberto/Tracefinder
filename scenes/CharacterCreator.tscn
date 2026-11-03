@@ -379,12 +379,12 @@ theme_override_colors/font_color = Color(0.55, 0.57, 0.59, 1)
 theme_override_font_sizes/font_size = 13
 text = "Feat ancestry"
 
-[node name="AncestryFeatValueLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/AncestryFeatRow/AncestryFeatRowBox"]
+[node name="AncestryFeatOption" type="OptionButton" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/AncestryFeatRow/AncestryFeatRowBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.57, 0.59, 1)
-theme_override_font_sizes/font_size = 12
-text = "nie wybrano"
+size_flags_horizontal = 3
+clip_text = true
 
 [node name="ClassFeatRow" type="PanelContainer" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
 layout_mode = 2
@@ -400,12 +400,12 @@ theme_override_colors/font_color = Color(0.55, 0.57, 0.59, 1)
 theme_override_font_sizes/font_size = 13
 text = "Feat klasowy"
 
-[node name="ClassFeatValueLabel" type="Label" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/ClassFeatRow/ClassFeatRowBox"]
+[node name="ClassFeatOption" type="OptionButton" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox/ClassFeatRow/ClassFeatRowBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.57, 0.59, 1)
-theme_override_font_sizes/font_size = 12
-text = "nie wybrano"
+size_flags_horizontal = 3
+clip_text = true
 
 [node name="HSeparator3" type="HSeparator" parent="Margin/RootVBox/MainLayout/LeftPanel/LeftScroll/LeftPanelBox"]
 layout_mode = 2
