@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 
 
 namespace Tracefinder.Character
 {
     public class SkillCatalog
     {
+        public static readonly IReadOnlyList<SkillName> All = Enum.GetValues<SkillName>();
+
         public static AbilityScore KeyAbilityFor(SkillName skill)
         {
             switch (skill)

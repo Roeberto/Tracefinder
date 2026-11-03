@@ -4,6 +4,9 @@ using Tracefinder.Items;
 
 namespace Tracefinder.Character
 {
+    // Dane z Player Core, sprawdzone w Archives of Nethys.
+    // Uproszczenia: mistrzostwo Wojownika na poziomie 5 obejmuje wszystkie grupy broni zamiast jednej wybranej,
+    // Wojownik ma na stałe Athletics, a Zbir cechę kluczową Dexterity. Pancerze i zaklęcia nie są modelowane.
     public static class ClassList
     {
         public static readonly ClassStats Fighter = new()
@@ -26,6 +29,26 @@ namespace Tracefinder.Character
                 [WeaponCategory.Advanced] = ProficiencyRank.Trained,
                 [WeaponCategory.Unarmed] = ProficiencyRank.Expert,
             },
+            RankUps =
+            [
+                new(3, ProficiencyStat.Will, ProficiencyRank.Expert),
+                new(5, ProficiencyStat.SimpleWeapons, ProficiencyRank.Master),
+                new(5, ProficiencyStat.MartialWeapons, ProficiencyRank.Master),
+                new(5, ProficiencyStat.UnarmedAttacks, ProficiencyRank.Master),
+                new(5, ProficiencyStat.AdvancedWeapons, ProficiencyRank.Expert),
+                new(7, ProficiencyStat.Perception, ProficiencyRank.Master),
+                new(9, ProficiencyStat.Fortitude, ProficiencyRank.Master),
+                new(11, ProficiencyStat.Unarmored, ProficiencyRank.Expert),
+                new(11, ProficiencyStat.ClassDc, ProficiencyRank.Expert),
+                new(15, ProficiencyStat.Reflex, ProficiencyRank.Master),
+                new(17, ProficiencyStat.Unarmored, ProficiencyRank.Master),
+                new(19, ProficiencyStat.SimpleWeapons, ProficiencyRank.Legendary),
+                new(19, ProficiencyStat.MartialWeapons, ProficiencyRank.Legendary),
+                new(19, ProficiencyStat.UnarmedAttacks, ProficiencyRank.Legendary),
+                new(19, ProficiencyStat.AdvancedWeapons, ProficiencyRank.Master),
+                new(19, ProficiencyStat.ClassDc, ProficiencyRank.Master),
+            ],
+            ClassFeatAtFirstLevel = true,
             Level1Features = ["Attack of Opportunity", "Shield Block"]
         };
 
@@ -49,6 +72,16 @@ namespace Tracefinder.Character
                 [WeaponCategory.Advanced] = ProficiencyRank.Untrained,
                 [WeaponCategory.Unarmed] = ProficiencyRank.Trained,
             },
+            RankUps =
+            [
+                new(5, ProficiencyStat.Reflex, ProficiencyRank.Expert),
+                new(9, ProficiencyStat.Fortitude, ProficiencyRank.Expert),
+                new(11, ProficiencyStat.Perception, ProficiencyRank.Expert),
+                new(11, ProficiencyStat.SimpleWeapons, ProficiencyRank.Expert),
+                new(11, ProficiencyStat.UnarmedAttacks, ProficiencyRank.Expert),
+                new(13, ProficiencyStat.Unarmored, ProficiencyRank.Expert),
+                new(17, ProficiencyStat.Will, ProficiencyRank.Master),
+            ],
             Level1Features = ["Arcane Spellcasting", "Arcane School", "Spellbook"]
         };
 
@@ -72,6 +105,13 @@ namespace Tracefinder.Character
                 [WeaponCategory.Advanced] = ProficiencyRank.Untrained,
                 [WeaponCategory.Unarmed] = ProficiencyRank.Trained,
             },
+            RankUps =
+            [
+                new(5, ProficiencyStat.Perception, ProficiencyRank.Expert),
+                new(9, ProficiencyStat.Will, ProficiencyRank.Master),
+                new(11, ProficiencyStat.Reflex, ProficiencyRank.Expert),
+                new(13, ProficiencyStat.Unarmored, ProficiencyRank.Expert),
+            ],
             Level1Features = ["Divine Spellcasting", "Divine Font", "Doctrine"]
         };
 
@@ -91,10 +131,32 @@ namespace Tracefinder.Character
             WeaponProficiencies = new()
             {
                 [WeaponCategory.Simple] = ProficiencyRank.Trained,
-                [WeaponCategory.Martial] = ProficiencyRank.Untrained,
+                [WeaponCategory.Martial] = ProficiencyRank.Trained,
                 [WeaponCategory.Advanced] = ProficiencyRank.Untrained,
                 [WeaponCategory.Unarmed] = ProficiencyRank.Trained,
             },
+            RankUps =
+            [
+                new(5, ProficiencyStat.SimpleWeapons, ProficiencyRank.Expert),
+                new(5, ProficiencyStat.MartialWeapons, ProficiencyRank.Expert),
+                new(5, ProficiencyStat.UnarmedAttacks, ProficiencyRank.Expert),
+                new(7, ProficiencyStat.Reflex, ProficiencyRank.Master),
+                new(7, ProficiencyStat.Perception, ProficiencyRank.Master),
+                new(9, ProficiencyStat.Fortitude, ProficiencyRank.Expert),
+                new(11, ProficiencyStat.ClassDc, ProficiencyRank.Expert),
+                new(13, ProficiencyStat.Reflex, ProficiencyRank.Legendary),
+                new(13, ProficiencyStat.Perception, ProficiencyRank.Legendary),
+                new(13, ProficiencyStat.Unarmored, ProficiencyRank.Expert),
+                new(13, ProficiencyStat.SimpleWeapons, ProficiencyRank.Master),
+                new(13, ProficiencyStat.MartialWeapons, ProficiencyRank.Master),
+                new(13, ProficiencyStat.UnarmedAttacks, ProficiencyRank.Master),
+                new(17, ProficiencyStat.Will, ProficiencyRank.Master),
+                new(19, ProficiencyStat.Unarmored, ProficiencyRank.Master),
+                new(19, ProficiencyStat.ClassDc, ProficiencyRank.Master),
+            ],
+            ClassFeatAtFirstLevel = true,
+            SkillFeatEveryLevel = true,
+            SkillIncreaseEveryLevel = true,
             Level1Features = ["Rogue's Racket (Thief)", "Sneak Attack", "Surprise Attack"]
         };
 
@@ -102,5 +164,15 @@ namespace Tracefinder.Character
         [
             Fighter, Wizard, Cleric, Rogue
         ];
+
+        public static ClassStats ByName(string name)
+        {
+            foreach (ClassStats classStats in All)
+            {
+                if (classStats.Name == name)
+                    return classStats;
+            }
+            return null;
+        }
     }
 }
