@@ -15,7 +15,9 @@ namespace Tracefinder.UI
         private static readonly Vector2I Stone = new(4, 26);
         private static readonly Vector2I Dirt = new(1, 26);
         private static readonly Vector2I Sand = new(7, 26);
-        private static readonly Vector2I[] Trees = { new(13, 9), new(15, 9), new(16, 9), new(18, 9) };
+        private static readonly Vector2I[] Trees = { new(15, 9), new(18, 9), new(14, 9), new(15, 9) };
+        private static readonly Color ForestShade = new(0.55f, 0.72f, 0.55f);
+        private static readonly Color MountainShade = new(0.68f, 0.68f, 0.72f);
         private static readonly Vector2I[] Rocks = { new(54, 21), new(55, 21), new(56, 21), new(54, 20) };
         private static readonly Vector2I Campfire = new(14, 8);
         private static readonly Vector2I BurntCamp = new(13, 8);
@@ -32,10 +34,10 @@ namespace Tracefinder.UI
             TextureFilter = TextureFilterEnum.Nearest;
         }
 
-        private void Tile(Vector2I atlas, Rect2 target)
+        private void Tile(Vector2I atlas, Rect2 target, Color? shade = null)
         {
             Rect2 region = new(atlas.X * TilePitch, atlas.Y * TilePitch, TileSize, TileSize);
-            DrawTextureRectRegion(_sheet, target, region);
+            DrawTextureRectRegion(_sheet, target, region, shade ?? new Color(1, 1, 1));
         }
 
         public override void _Draw()
@@ -50,7 +52,7 @@ namespace Tracefinder.UI
                 {
                     Rect2 cell = new(x * CellSize, y * CellSize, CellSize, CellSize);
                     Biome biome = map[x, y];
-                    Tile(GroundFor(biome), cell);
+                    Tile(GroundFor(biome), cell, biome == Biome.Forest ? ForestShade : biome == Biome.Mountains ? MountainShade : null);
                     int variant = (x * 7 + y * 13) % 4;
                     if (biome == Biome.Forest)
                         Tile(Trees[variant], cell);
@@ -104,7 +106,9 @@ namespace Tracefinder.UI
 
             Font font = ThemeDB.FallbackFont;
             const int fontSize = 12;
-            Vector2 textPosition = cell.Position + new Vector2(-CellSize, -4);
+            // Nazwa nie może wyjść poza świat przy krawędzi mapy
+            float textLeft = Mathf.Clamp(cell.Position.X - CellSize, 0, Campaign.Map.Width * CellSize - CellSize * 3);
+            Vector2 textPosition = new(textLeft, cell.Position.Y - 4);
             DrawString(font, textPosition + new Vector2(1, 1), site.Name, HorizontalAlignment.Center, CellSize * 3, fontSize, new Color(0, 0, 0));
             DrawString(font, textPosition, site.Name, HorizontalAlignment.Center, CellSize * 3, fontSize, new Color(1, 1, 1));
         }

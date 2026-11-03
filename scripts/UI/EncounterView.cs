@@ -359,6 +359,7 @@ namespace Tracefinder.UI
         private void RebuildStrikeOptions()
         {
             _strikeOption.Clear();
+            _damageOption.Clear();
             Combatant unit = _encounter.Current;
             if (unit == null)
                 return;
